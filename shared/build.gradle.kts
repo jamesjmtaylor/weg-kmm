@@ -27,7 +27,6 @@ kotlin {
         val kotlin_version = "1.6.0"
         val androidx_lifecycle_version = "2.2.0"
         val coroutine_version = "1.6.0"
-        val moko_mvvm_version = "0.12.0"
         val kodeinVersion = "7.10.0"
         val ktor_version = "1.6.8"
         val sql_delight_version = "1.5.3"
@@ -37,11 +36,7 @@ kotlin {
                 api("org.jetbrains.kotlin:kotlin-stdlib-common")
                 // COROUTINES
                 implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version")
-                // MOKO - MVVM
-                implementation("dev.icerock.moko:mvvm-core:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-livedata:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-state:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-livedata-resources:$moko_mvvm_version")
+
                 // KODE IN
                 implementation("org.kodein.di:kodein-di:$kodeinVersion")
                 // KTOR
@@ -56,19 +51,12 @@ kotlin {
         val commonTest by getting {
             dependencies {
                 implementation(kotlin("test"))
-                implementation("dev.icerock.moko:mvvm-test:$moko_mvvm_version")
             }
         }
         val androidMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
                 implementation("org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version")
-                // MOKO - MVVM
-                implementation("dev.icerock.moko:mvvm-livedata-material:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-livedata-glide:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-livedata-swiperefresh:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-databinding:$moko_mvvm_version")
-                implementation("dev.icerock.moko:mvvm-viewbinding:$moko_mvvm_version")
                 implementation("androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version")
                 // KTOR
                 implementation("io.ktor:ktor-client-android:$ktor_version")
