@@ -30,7 +30,7 @@ kotlin {
         val kodeinVersion = "7.10.0"
         val ktor_version = "1.6.8"
         val sql_delight_version = "1.5.3"
-
+//    TODO: migrate remaining dependencies to dependencyResolutionManagement
         val commonMain by getting {
             dependencies {
                 api("org.jetbrains.kotlin:kotlin-stdlib-common")
@@ -40,10 +40,11 @@ kotlin {
                 // KODE IN
                 implementation("org.kodein.di:kodein-di:$kodeinVersion")
                 // KTOR
-                implementation("io.ktor:ktor-client-core:$ktor_version")
-                implementation("io.ktor:ktor-client-json:$ktor_version")
-                implementation("io.ktor:ktor-client-logging:$ktor_version")
-                implementation("io.ktor:ktor-client-serialization:$ktor_version")
+                implementation(libs.ktor.core)
+                implementation(libs.ktor.json)
+                implementation(libs.ktor.logging)
+                implementation(libs.ktor.serialization)
+
                 // SQL Delight
                 implementation("com.squareup.sqldelight:runtime:$sql_delight_version")
             }
@@ -53,6 +54,7 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
+        //    TODO: migrate remaining dependencies to dependencyResolutionManagement
         val androidMain by getting {
             dependencies {
                 implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
