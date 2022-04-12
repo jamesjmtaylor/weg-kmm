@@ -14,8 +14,8 @@ kotlin {
     iosSimulatorArm64()
 
     cocoapods {
-        summary = "Some description for the Shared Module"
-        homepage = "Link to the Shared Module homepage"
+        summary = "The WEG Shared Module provides a common data repository for equipment retrieval and storage."
+        homepage = "https://jjmtaylor.com"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")
         framework {
@@ -24,29 +24,19 @@ kotlin {
     }
 
     sourceSets {
-        val kotlin_version = "1.6.0"
-        val androidx_lifecycle_version = "2.2.0"
-        val coroutine_version = "1.6.0"
-        val kodeinVersion = "7.10.0"
-        val ktor_version = "1.6.8"
-        val sql_delight_version = "1.5.3"
-//    TODO: migrate remaining dependencies to dependencyResolutionManagement
         val commonMain by getting {
             dependencies {
-                api("org.jetbrains.kotlin:kotlin-stdlib-common")
-                // COROUTINES
-                implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutine_version")
+                api(libs.kotlin.stdlib.common) //"org.jetbrains.kotlin:kotlin-stdlib-common"
 
-                // KODE IN
-                implementation("org.kodein.di:kodein-di:$kodeinVersion")
+                implementation(libs.coroutines)
+                implementation(libs.kodein)
+                implementation(libs.sqldelight)
+
                 // KTOR
                 implementation(libs.ktor.core)
                 implementation(libs.ktor.json)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
-
-                // SQL Delight
-                implementation("com.squareup.sqldelight:runtime:$sql_delight_version")
             }
         }
         val commonTest by getting {
@@ -54,16 +44,16 @@ kotlin {
                 implementation(kotlin("test"))
             }
         }
-        //    TODO: migrate remaining dependencies to dependencyResolutionManagement
+
         val androidMain by getting {
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version")
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version")
-                implementation("androidx.lifecycle:lifecycle-extensions:$androidx_lifecycle_version")
+                implementation(libs.kotlin.stdlib)
+                implementation(libs.kotlin.stdlib.common)
+                implementation(libs.lifecycle)
+                implementation(libs.sqldelight.android)
+
                 // KTOR
-                implementation("io.ktor:ktor-client-android:$ktor_version")
-                // SQL Delight
-                implementation("com.squareup.sqldelight:android-driver:$sql_delight_version")
+                implementation(libs.ktor.android)
             }
         }
         val androidTest by getting
@@ -76,11 +66,11 @@ kotlin {
             iosArm64Main.dependsOn(this)
             iosSimulatorArm64Main.dependsOn(this)
             dependencies {
-                implementation("org.jetbrains.kotlin:kotlin-stdlib-common:$kotlin_version")
+                implementation(libs.kotlin.stdlib.common)
+                implementation(libs.sqldelight.ios)
+
                 // KTOR
-                implementation("io.ktor:ktor-client-ios:$ktor_version")
-                // SQL Delight
-                implementation("com.squareup.sqldelight:native-driver:$sql_delight_version")
+                implementation(libs.ktor.ios)
             }
         }
         val iosX64Test by getting
