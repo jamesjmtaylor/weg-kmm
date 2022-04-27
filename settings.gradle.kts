@@ -11,14 +11,15 @@ dependencyResolutionManagement {
     versionCatalogs {
         create("libs") {
 
-            version("kotlin", "1.6.0")
+            version("kotlin", "1.6.10")
+            version("coroutines", "1.6.0")
             version("kodein", "7.10.0")
             version("lifecycle", "2.2.0")
             version("sqldelight", "1.5.3")
             version("ktor", "1.6.8")
             version("compose", "1.1.1")
 
-            library("coroutines","org.jetbrains.kotlinx","kotlinx-coroutines-core").versionRef("kotlin")
+            library("coroutines","org.jetbrains.kotlinx","kotlinx-coroutines-core").versionRef("coroutines")
             library("kotlin-stdlib", "org.jetbrains.kotlin", "kotlin-stdlib").versionRef("kotlin")
             library("kotlin-stdlib-common", "org.jetbrains.kotlin", "kotlin-stdlib-common").versionRef("kotlin")
 
@@ -35,6 +36,7 @@ dependencyResolutionManagement {
             library("ktor-json","io.ktor","ktor-client-json").versionRef("ktor")
             library("ktor-logging","io.ktor","ktor-client-logging").versionRef("ktor")
             library("ktor-serialization","io.ktor","ktor-client-serialization").versionRef("ktor")
+            library("kotlinx-serialization", "org.jetbrains.kotlinx","kotlinx-serialization-core").version("1.2.2")
 
             //Android specific
             library("material", "com.google.android.material", "material").version("1.5.0")

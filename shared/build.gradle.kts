@@ -1,7 +1,9 @@
 plugins {
     kotlin("multiplatform")
     kotlin("native.cocoapods")
+    kotlin("plugin.serialization")
     id("com.android.library")
+    id("com.squareup.sqldelight")
 }
 
 version = "1.0"
@@ -26,7 +28,7 @@ kotlin {
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.kotlin.stdlib.common) //"org.jetbrains.kotlin:kotlin-stdlib-common"
+                api(libs.kotlin.stdlib.common) //"org.jamesjmtaylor.kotlin:kotlin-stdlib-common"
 
                 implementation(libs.coroutines)
                 implementation(libs.kodein)
@@ -91,5 +93,11 @@ android {
     defaultConfig {
         minSdk = 26
         targetSdk = 32
+    }
+}
+
+sqldelight {
+    database("AppDatabase") {
+        packageName = "com.jamesjmtaylor.weg.shared.cache"
     }
 }
