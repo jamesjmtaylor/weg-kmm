@@ -22,13 +22,16 @@ kotlin {
         podfile = project.file("../iosApp/Podfile")
         framework {
             baseName = "shared"
+            //See https://github.com/cashapp/sqldelight/issues/2512#issuecomment-937699879
+            //NOTE: If you get `dyld: Library not loaded` try running `pod install` from ./iosApp/
+            isStatic = false
         }
     }
 
     sourceSets {
         val commonMain by getting {
             dependencies {
-                api(libs.kotlin.stdlib.common) //"org.jamesjmtaylor.kotlin:kotlin-stdlib-common"
+                api(libs.kotlin.stdlib.common)
 
                 implementation(libs.coroutines)
                 implementation(libs.kodein)
@@ -100,4 +103,5 @@ sqldelight {
     database("AppDatabase") {
         packageName = "com.jamesjmtaylor.weg.shared.cache"
     }
+    linkSqlite = true //see https://github.com/cashapp/sqldelight/issues/1442#issuecomment-893978530
 }

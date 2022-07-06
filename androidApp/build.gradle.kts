@@ -39,7 +39,7 @@ android {
         }
     }
 }
-//    TODO: migrate remaining dependencies to dependencyResolutionManagement
+
 dependencies {
     implementation(project(":shared"))
     implementation(libs.material)

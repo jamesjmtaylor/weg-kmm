@@ -1,39 +1,45 @@
 import kotlin.collections.List;
 
 CREATE TABLE search_result (
-id INTEGER NOT NULL PRIMARY KEY,
+equipment_id INTEGER NOT NULL PRIMARY KEY,
 title TEXT,
 categories TEXT
 );
 
-CREATE TABLE image (
-search_result_id INTEGER NOT NULL,
-name TEXT,
-url TEXT,
-FOREIGN KEY (search_result_id) REFERENCES search_result ON DELETE CASCADE
-);
-
 insertResult:
-INSERT INTO search_result(title, id, categories)
+INSERT INTO search_result(title, equipment_id, categories)
 VALUES(?,?,?);
 
-insertImages:
-INSERT INTO image(search_result_id, name, url)
-VALUES(?,?,?);
+selectResultByEquipmentId:
+SELECT * FROM search_result
+WHERE equipment_id = ?;
+
+selectAllSearchResults:
+SELECT search_result.*, image.*
+FROM search_result
+LEFT JOIN image ON image.equipment_id == search_result.equipment_id;
 
 removeAllResults:
 DELETE FROM search_result;
 
-selectAllSearchResultWithImages:
-SELECT *
-FROM search_result
-INNER JOIN image ON search_result.id = image.search_result_id;
+CREATE TABLE image (
+equipment_id INTEGER NOT NULL,
+name TEXT,
+url TEXT
+);
 
-selectSearchResultWithImagesById:
-SELECT *
-FROM search_result
-INNER JOIN image ON search_result.id = image.search_result_id
-WHERE search_result.id=?;
+insertImage:
+INSERT INTO image(equipment_id, name, url)
+VALUES(?,?,?);
+
+selectImagesByEquipmentId:
+SELECT * FROM image
+WHERE equipment_id = ?;
+
+removeAllImages:
+DELETE FROM image;
+
+
 
 
 

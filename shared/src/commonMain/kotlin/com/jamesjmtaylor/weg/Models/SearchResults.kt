@@ -32,7 +32,7 @@ data class Query (
 @Serializable
 data class SearchResult (
     val title: String? = null,
-    val id: Long? = null,
+    val id: Long = 0,
     val categories: List<String> = emptyList(),
     val images: List<Image> = emptyList()
 )
