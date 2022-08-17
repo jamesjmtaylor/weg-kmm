@@ -16,7 +16,8 @@ kotlin {
     iosSimulatorArm64()
 
     cocoapods {
-        summary = "The WEG Shared Module provides a common data repository for equipment retrieval and storage."
+        summary = "The WEG Shared Module provides a common data repository for equipment " +
+                "retrieval and storage."
         homepage = "https://jjmtaylor.com"
         ios.deploymentTarget = "14.1"
         podfile = project.file("../iosApp/Podfile")

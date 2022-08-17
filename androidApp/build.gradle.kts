@@ -49,6 +49,7 @@ dependencies {
     implementation(libs.androidx.ui)
     implementation(libs.androidx.material)
     implementation(libs.androidx.ui.tooling.preview)
+    implementation(libs.androidx.ui.runtime)
     implementation(libs.androidx.lifecycle)
     implementation(libs.androidx.activity)
 

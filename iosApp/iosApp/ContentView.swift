@@ -2,15 +2,14 @@ import SwiftUI
 import shared
 
 struct ContentView: View {
-	let greet = Greeting().greeting()
-
+    @ObservedObject private(set) var vm: EquipmentViewModel
 	var body: some View {
-		Text(greet)
+        Text("Results: \(vm.equipment.count)")
 	}
 }
 
-struct ContentView_Previews: PreviewProvider {
-	static var previews: some View {
-		ContentView()
-	}
-}
+//struct ContentView_Previews: PreviewProvider {
+//	static var previews: some View {
+//		ContentView()
+//	}
+//}

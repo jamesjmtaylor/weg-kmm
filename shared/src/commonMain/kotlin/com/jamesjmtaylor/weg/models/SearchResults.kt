@@ -1,4 +1,4 @@
-package com.jamesjmtaylor.weg.Models
+package com.jamesjmtaylor.weg.models
 
 // To parse the JSON, install kotlin's serialization plugin and do:
 //
@@ -13,7 +13,11 @@ data class SearchResults (
     @SerialName("continue")
     val searchResultsContinue: Continue? = null,
     val query: Query? = null
-)
+) {
+    fun asList(): List<SearchResult>? {
+        return query?.searchResults
+    }
+}
 @Serializable
 data class Continue (
     val sroffset: Long? = null,

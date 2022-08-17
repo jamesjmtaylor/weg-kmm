@@ -1,43 +1,56 @@
 package com.jamesjmtaylor.weg.android
 
+import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
-import com.jamesjmtaylor.weg.android.ui.theme.Worldwide_Equipment_GuideTheme
+import androidx.lifecycle.ViewModelProvider
+import com.jamesjmtaylor.weg.EquipmentSDK
+import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
+import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.cancel
+import kotlinx.coroutines.launch
 
 class TabActivity : ComponentActivity() {
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        val equipmentViewModel = ViewModelProvider(this).get(EquipmentViewModel::class.java)
         setContent {
-            Worldwide_Equipment_GuideTheme {
+            WorldwideEquipmentGuideTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    Greeting("Android")
+                    EquipmentScreen(equipmentViewModel)
                 }
             }
         }
+        equipmentViewModel.getEquipment()
     }
 }
 
 @Composable
-fun Greeting(name: String) {
-    Text(text = "Hello $name!")
+fun EquipmentScreen(vm: EquipmentViewModel) {
+    val equipmentState = vm.equipmentLiveData.observeAsState()
+    equipmentState.value?.count()?.let { Text(text = "Retrieved: $it") }
 }
 
 @Preview(showBackground = true)
 @Composable
 fun DefaultPreview() {
-    Worldwide_Equipment_GuideTheme {
-        Greeting("Android")
+    WorldwideEquipmentGuideTheme {
+        EquipmentScreen(EquipmentViewModel(LocalContext.current.applicationContext as Application))
     }
 }

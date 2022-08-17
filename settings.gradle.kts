@@ -48,6 +48,7 @@ dependencyResolutionManagement {
             library("androidx-ui-tooling-preview","androidx.compose.ui","ui-tooling-preview").versionRef("compose")
             library("androidx-ui-test","androidx.compose.ui","ui-test-junit4").versionRef("compose")
             library("androidx-ui-tooling","androidx.compose.ui","ui-tooling").versionRef("compose")
+            library("androidx-ui-runtime", "androidx.compose.runtime", "runtime-livedata").versionRef("compose")
 
 
             library("androidx-lifecycle","androidx.lifecycle","lifecycle-runtime-ktx").version("2.4.1")
@@ -57,6 +58,6 @@ dependencyResolutionManagement {
     }
 }
 
-rootProject.name = "Worldwide_Equipment_Guide"
+rootProject.name = "WorldwideEquipmentGuide"
 include(":androidApp")
 include(":shared")

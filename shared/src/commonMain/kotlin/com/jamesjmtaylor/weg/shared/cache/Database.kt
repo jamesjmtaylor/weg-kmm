@@ -1,11 +1,11 @@
 package com.jamesjmtaylor.weg.shared.cache
 
-import com.jamesjmtaylor.weg.Models.Image
-import com.jamesjmtaylor.weg.Models.SearchResult
+import com.jamesjmtaylor.weg.models.Image
+import com.jamesjmtaylor.weg.models.SearchResult
 
 /**
  * SQLDelight database for caching REST API query results.
- * "internal" accessibility modifier means Database is- only accessible from within the
+ * "internal" accessibility modifier means the Database is only accessible from within the
  * multiplatform module
  */
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
