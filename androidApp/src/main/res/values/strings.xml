@@ -1,3 +1,5 @@
 <resources>
     <string name="title_activity_tab">TabActivity</string>
+    <string name="placeholder_search">Search</string>
+    <string name="placeholder_name">Name Placeholder</string>
 </resources>

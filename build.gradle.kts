@@ -18,7 +18,8 @@ allprojects {
         google()
         mavenCentral()
     }
-
+    //Without this iOS throws:
+    //"Uncaught Kotlin exception: kotlin.Error: Ktor native HttpClient requires kotlinx.coroutines version with `native-mt`"
     configurations.all {
         resolutionStrategy {
             force("org.jetbrains.kotlinx:kotlinx-coroutines-core:${libs.versions.coroutines.get()}-native-mt")

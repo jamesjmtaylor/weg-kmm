@@ -8,18 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
-import com.jamesjmtaylor.weg.EquipmentSDK
+import androidx.navigation.compose.rememberNavController
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
-import com.jamesjmtaylor.weg.models.SearchResult
-import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.cancel
-import kotlinx.coroutines.launch
 
 class TabActivity : ComponentActivity() {
 
