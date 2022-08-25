@@ -1,17 +1,17 @@
 package com.jamesjmtaylor.weg.android.subviews
 
 import android.content.res.Configuration
+import android.media.Image
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
@@ -25,23 +25,24 @@ fun EquipmentCard(
     @StringRes text: Int,
     modifier: Modifier = Modifier
 ) {
-    Surface(
-        shape = MaterialTheme.shapes.small,
-        modifier = modifier
+    Column(
+        modifier = modifier,
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        Row(
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.width(192.dp)
-        ) {
-            androidx.compose.foundation.Image(
-                painter = painterResource(id = drawable), 
-                contentDescription = stringResource(id = text))
-            Text(
-                text = stringResource(text),
-                style = MaterialTheme.typography.h3,
-                modifier = Modifier.padding(horizontal = 16.dp)
+        androidx.compose.foundation.Image(
+            painter = painterResource(drawable),
+            contentDescription = null,
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .size(88.dp)
+        )
+        Text(
+            text = stringResource(text),
+            style = MaterialTheme.typography.h6,
+            modifier = Modifier.paddingFromBaseline(
+                top = 24.dp, bottom = 8.dp
             )
-        }
+        )
     }
 }
 
@@ -50,6 +51,9 @@ fun EquipmentCard(
 @Composable
 fun FavoriteCollectionCardPreview() {
     WorldwideEquipmentGuideTheme {
-        EquipmentCard(drawable = R.drawable.placeholder, text = R.string.placeholder_name)
+        EquipmentCard(
+            drawable = R.drawable.placeholder,
+            text = R.string.placeholder_name,
+            modifier = Modifier.padding(8.dp))
     }
 }
