@@ -6,8 +6,8 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.GridCells
-import androidx.compose.foundation.lazy.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
@@ -16,10 +16,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.ViewModelProvider
-import androidx.navigation.compose.rememberNavController
 import com.jamesjmtaylor.weg.android.subviews.EquipmentCard
 import com.jamesjmtaylor.weg.android.subviews.SearchBar
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
+import com.jamesjmtaylor.weg.network.Api.Companion.BASE_URL
 
 class TabActivity : ComponentActivity() {
 
@@ -41,7 +41,7 @@ class TabActivity : ComponentActivity() {
     }
 }
 
-@OptIn(ExperimentalFoundationApi::class)
+
 @Composable
 fun EquipmentScreen(vm: EquipmentViewModel,
                     modifier: Modifier = Modifier) {
@@ -50,16 +50,18 @@ fun EquipmentScreen(vm: EquipmentViewModel,
     Column {
         SearchBar()
         LazyVerticalGrid(
-            cells = GridCells.Adaptive(100.dp),
+            columns = GridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(8.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
-            modifier = modifier.height(120.dp)
+            modifier = modifier.fillMaxHeight()
         ) {
             equipmentState.value?.let { searchResults ->
                 items(searchResults.count()) { index ->
+                    val img = if (searchResults[index].images.first().url.isNullOrEmpty()) null
+                    else BASE_URL + searchResults[index].images.first().url
                     EquipmentCard(
-                        drawable = searchResults[index].images.first().url,
+                        imgUrl = img,
                         text = searchResults[index].title,
                         modifier = Modifier.height(56.dp)
                     )

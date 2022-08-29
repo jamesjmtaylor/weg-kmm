@@ -53,6 +53,7 @@ dependencyResolutionManagement {
             library("androidx-ui-tooling-preview","androidx.compose.ui","ui-tooling-preview").versionRef("compose")
             library("androidx-ui-tooling","androidx.compose.ui","ui-tooling").versionRef("compose")
             library("androidx-ui-runtime", "androidx.compose.runtime", "runtime-livedata").versionRef("compose")
+
             library("androidx-lifecycle","androidx.lifecycle","lifecycle-runtime-ktx").version("2.4.1")
             library("androidx-activity","androidx.activity","activity-compose").version("1.4.0")
 

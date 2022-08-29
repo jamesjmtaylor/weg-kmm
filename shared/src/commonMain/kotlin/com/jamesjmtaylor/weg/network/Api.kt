@@ -16,7 +16,7 @@ class Api {
     }
 
     suspend fun getEquipment(): SearchResults {
-        val equipmentURl = BASE_URL + "?format=json&" +
+        val equipmentURl = API_URL + "?format=json&" +
                 "action=query&" +
                 "list=searchG2&" +
                 "srimages=1&" +
@@ -27,6 +27,7 @@ class Api {
     }
 
     companion object {
-        private const val BASE_URL = "https://odin.tradoc.army.mil/mediawiki/api.php"
+        const val BASE_URL = "https://odin.tradoc.army.mil"
+        const val API_URL = "$BASE_URL/mediawiki/api.php"
     }
 }
