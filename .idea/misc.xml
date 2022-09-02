@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../layout/compose-model-1648731768914.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1648736467685.xml" value="1.0" />
+        <entry key="../../../../layout/compose-model-1649249897215.xml" value="2.0" />
+        <entry key="../../../../layout/compose-model-1649426438014.xml" value="2.0" />
+        <entry key="../../../../layout/compose-model-1660745846109.xml" value="0.9" />
+        <entry key="../../../../layout/compose-model-1660833111864.xml" value="0.25" />
+        <entry key="../../../../layout/compose-model-1660834772266.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1661435875489.xml" value="0.22" />
+        <entry key="../../../../layout/compose-model-1661437116533.xml" value="1.0611111111111111" />
+        <entry key="../../../../layout/compose-model-1661783952294.xml" value="0.7382629107981221" />
+        <entry key="../../../../layout/compose-model-1661786000072.xml" value="0.2935222672064777" />
+        <entry key="../../../../layout/compose-model-1661954657492.xml" value="0.40131578947368424" />
+        <entry key="../../../../layout/compose-model-1662125565918.xml" value="0.3712962962962963" />
+        <entry key="../../../../layout/compose-model-1662125851764.xml" value="0.225" />
+        <entry key="../../../../layout/compose-model-1662126178715.xml" value="0.3041497975708502" />
+        <entry key="androidApp/src/main/res/layout/activity_main.xml" value="0.20625" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
