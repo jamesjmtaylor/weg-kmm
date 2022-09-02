@@ -1,50 +1,24 @@
-package com.jamesjmtaylor.weg.android
+package com.jamesjmtaylor.weg.android.subviews
 
 import android.app.Application
-import android.os.Bundle
-import androidx.activity.ComponentActivity
-import androidx.activity.compose.setContent
-import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.material.*
-import androidx.compose.runtime.*
+import androidx.compose.material.Text
+import androidx.compose.runtime.Composable
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.ViewModelProvider
-import com.jamesjmtaylor.weg.android.subviews.EquipmentCard
-import com.jamesjmtaylor.weg.android.subviews.SearchBar
+import com.jamesjmtaylor.weg.android.EquipmentViewModel
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
-import com.jamesjmtaylor.weg.network.Api.Companion.BASE_URL
-
-class TabActivity : ComponentActivity() {
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        val equipmentViewModel = ViewModelProvider(this).get(EquipmentViewModel::class.java)
-        setContent {
-            WorldwideEquipmentGuideTheme {
-                // A surface container using the 'background' color from the theme
-                Surface(
-                    modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colors.background
-                ) {
-                    EquipmentScreen(equipmentViewModel)
-                }
-            }
-        }
-        equipmentViewModel.getEquipment()
-    }
-}
-
+import com.jamesjmtaylor.weg.network.Api
 
 @Composable
 fun EquipmentScreen(vm: EquipmentViewModel,
-                    modifier: Modifier = Modifier) {
+                    modifier: Modifier = Modifier
+) {
     val equipmentState = vm.equipmentLiveData.observeAsState()
     equipmentState.value?.count()?.let { Text(text = "Retrieved: $it") }
     Column {
@@ -59,7 +33,7 @@ fun EquipmentScreen(vm: EquipmentViewModel,
             equipmentState.value?.let { searchResults ->
                 items(searchResults.count()) { index ->
                     val img = if (searchResults[index].images.first().url.isNullOrEmpty()) null
-                    else BASE_URL + searchResults[index].images.first().url
+                    else Api.BASE_URL + searchResults[index].images.first().url
                     EquipmentCard(
                         imgUrl = img,
                         text = searchResults[index].title,
@@ -72,7 +46,7 @@ fun EquipmentScreen(vm: EquipmentViewModel,
 
 @Preview(showBackground = true)
 @Composable
-fun DefaultPreview() {
+fun PreviewEquipmentScreen() {
     WorldwideEquipmentGuideTheme {
         EquipmentScreen(EquipmentViewModel(LocalContext.current.applicationContext as Application))
     }
