@@ -49,7 +49,6 @@ fun FavoriteCollectionCardPreview() {
     WorldwideEquipmentGuideTheme {
         EquipmentCard(
             imgUrl = null,
-            text = stringResource(R.string.placeholder_name),
-            modifier = Modifier.padding(8.dp))
+            text = stringResource(R.string.placeholder_name))
     }
 }

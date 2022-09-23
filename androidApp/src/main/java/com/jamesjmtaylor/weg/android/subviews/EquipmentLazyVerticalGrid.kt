@@ -6,23 +6,21 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.livedata.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.jamesjmtaylor.weg.android.EquipmentViewModel
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
+import com.jamesjmtaylor.weg.models.SearchResult
 import com.jamesjmtaylor.weg.network.Api
 
 @Composable
-fun EquipmentScreen(vm: EquipmentViewModel,
-                    modifier: Modifier = Modifier
+fun EquipmentLazyVerticalGrid(equipmentState: State<List<SearchResult>?>,
+                              modifier: Modifier = Modifier
 ) {
-    val equipmentState = vm.equipmentLiveData.observeAsState()
-    equipmentState.value?.count()?.let { Text(text = "Retrieved: $it") }
-    Column {
-        SearchBar()
         LazyVerticalGrid(
             columns = GridCells.Adaptive(150.dp),
             contentPadding = PaddingValues(horizontal = 16.dp),
@@ -32,22 +30,26 @@ fun EquipmentScreen(vm: EquipmentViewModel,
         ) {
             equipmentState.value?.let { searchResults ->
                 items(searchResults.count()) { index ->
-                    val img = if (searchResults[index].images.first().url.isNullOrEmpty()) null
-                    else Api.BASE_URL + searchResults[index].images.first().url
+                    val img = if (searchResults[index].images.first().url.isNullOrEmpty())
+                        null
+                    else
+                        Api.BASE_URL + searchResults[index].images.first().url
+                    val text = searchResults[index].title
                     EquipmentCard(
                         imgUrl = img,
-                        text = searchResults[index].title,
+                        text = text,
                         modifier = Modifier.height(56.dp)
                     )
                 }}
-        }
-    }
-}
+}}
 
 @Preview(showBackground = true)
 @Composable
 fun PreviewEquipmentScreen() {
     WorldwideEquipmentGuideTheme {
-        EquipmentScreen(EquipmentViewModel(LocalContext.current.applicationContext as Application))
+        EquipmentLazyVerticalGrid(object : State<List<SearchResult>>{
+            override val value: List<SearchResult>
+                get() = listOf(SearchResult(),SearchResult())
+        })
     }
 }

@@ -28,7 +28,7 @@ fun SearchBar(
             )
         },
         colors = TextFieldDefaults.textFieldColors(
-            backgroundColor = MaterialTheme.colors.surface
+            backgroundColor = MaterialTheme.colors.background
         ),
         placeholder = {
             Text(stringResource(R.string.placeholder_search))

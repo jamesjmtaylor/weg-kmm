@@ -4,15 +4,18 @@ import android.app.Application
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Scaffold
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
 import com.jamesjmtaylor.weg.android.subviews.EquipmentBottomNavigation
-import com.jamesjmtaylor.weg.android.subviews.EquipmentScreen
+import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
+import com.jamesjmtaylor.weg.android.subviews.SearchBar
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 
 class EquipmentActivity : ComponentActivity() {
@@ -23,18 +26,22 @@ class EquipmentActivity : ComponentActivity() {
         setContent {
             EquipmentApp(equipmentViewModel)
         }
-        equipmentViewModel.getEquipment()
+        equipmentViewModel.landTabSelected()
     }
 }
 
 @Composable
 fun EquipmentApp(viewModel: EquipmentViewModel) {
+    val equipmentState = viewModel.equipmentLiveData.observeAsState()
     WorldwideEquipmentGuideTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(
-            bottomBar = { EquipmentBottomNavigation() }
+            bottomBar = { EquipmentBottomNavigation(viewModel) }
         ) { padding ->
-            EquipmentScreen(viewModel, Modifier.padding(padding))
+            Column {
+                SearchBar()
+                EquipmentLazyVerticalGrid(equipmentState, Modifier.padding(padding))
+            }
         }
     }
 }
