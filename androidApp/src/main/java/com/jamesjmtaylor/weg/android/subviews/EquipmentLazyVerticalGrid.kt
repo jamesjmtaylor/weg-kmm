@@ -23,9 +23,9 @@ fun EquipmentLazyVerticalGrid(equipmentState: State<List<SearchResult>?>,
 ) {
         LazyVerticalGrid(
             columns = GridCells.Adaptive(150.dp),
-            contentPadding = PaddingValues(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+            contentPadding = PaddingValues(horizontal = 0.dp),
+            horizontalArrangement = Arrangement.spacedBy(0.dp),
+            verticalArrangement = Arrangement.spacedBy(0.dp),
             modifier = modifier.fillMaxHeight()
         ) {
             equipmentState.value?.let { searchResults ->
@@ -38,7 +38,7 @@ fun EquipmentLazyVerticalGrid(equipmentState: State<List<SearchResult>?>,
                     EquipmentCard(
                         imgUrl = img,
                         text = text,
-                        modifier = Modifier.height(56.dp)
+                        modifier = Modifier.height(150.dp)
                     )
                 }}
 }}
