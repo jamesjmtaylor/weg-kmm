@@ -15,14 +15,14 @@ class Api {
         }
     }
 
-    suspend fun getEquipment(category: String): SearchResults {
+    suspend fun getEquipment(category: String, page: Int): SearchResults {
         val equipmentURl = API_URL + "?format=json&" +
                 "action=query&" +
                 "list=searchG2&" +
                 "srimages=1&" +
                 "srsearch=incategory:$category&" +
-                "srlimit=20" +
-                "&sroffset=0"
+                "srlimit=${(page + 1) * 50}" +
+                "&sroffset=${(page) * 50}"
         return httpClient.get(equipmentURl)
     }
 

@@ -1,22 +1,28 @@
 package com.jamesjmtaylor.weg.shared.cache
 
+import com.jamesjmtaylor.weg.EquipmentType
 import com.jamesjmtaylor.weg.models.Image
+import com.jamesjmtaylor.weg.models.PageProgress
 import com.jamesjmtaylor.weg.models.SearchResult
-import kotlinx.coroutines.Runnable
 
 /**
  * SQLDelight database for caching REST API query results.
  * "internal" accessibility modifier means the Database is only accessible from within the
- * multiplatform module
+ * multiplatform module.
+ *
+ * NOTE: Do **not** try to manually alter either the [database] class or its nested [dbQuery] functions.
+ * These are auto-generated based off of the queries in the **AppDatabase.sq** file.
  */
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
     private val database = AppDatabase(databaseDriverFactory.createDriver())
     private val dbQuery = database.appDatabaseQueries
 
+
     internal fun clearDatabase() {
         dbQuery.transaction {
             dbQuery.removeAllResults()
             dbQuery.removeAllImages()
+            dbQuery.removeAllPageProgress()
         }
     }
 
@@ -43,14 +49,14 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         dbQuery.transaction {
             results.forEach { result ->
                 //Checks if the result already has at least one image, and if not, inserts the fetched images
-                val image = dbQuery.selectImagesByEquipmentId(result.id).executeAsOneOrNull()
-                if (image == null) insertImage(result)
+                val image = dbQuery.selectImagesByEquipmentId(result.id).executeAsList()
+                if (image.isEmpty()) insertImages(result)
                 insertResult(result)
             }
         }
     }
 
-    private fun insertImage(result: SearchResult) {
+    private fun insertImages(result: SearchResult) {
         result.images.forEach { image ->
             dbQuery.insertImage(
                 name = image.name,
@@ -67,8 +73,12 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
             categories = result.categories.joinToString { it }
         )
     }
-    //TODO: Determine whether this returns multiples of the same search result,
-    // or if `.executeAsList()` handles it (answer: it's the former - need to fix)
+
+    /**
+     * Converts the raw SQLite data values from the row into a [SearchResult] DTO. Unused parameters
+     * are necessary because the column mapping is ordinally, not titularly, based.
+     */
+    @Suppress("UNUSED_PARAMETER")
     private fun mapSearchResultSelecting(
         equipmentId: Long,
         title: String?,
@@ -77,12 +87,34 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         imageName: String?,
         imageUrl: String?
     ) : SearchResult {
-        print(imageEquipmentId)
         return SearchResult(
             title = title,
             id = equipmentId,
             categories = categories?.split(",") ?: emptyList(),
             images = listOf(Image(imageName,imageUrl))
+        )
+    }
+
+    fun getPageProgressFor(equipmentType: EquipmentType): Long {
+        return dbQuery.selectPageProgressByEquipmentType(equipmentType.name, ::mapPageProgressSelecting)
+            .executeAsOneOrNull()?.page ?: 0
+    }
+
+    private fun mapPageProgressSelecting(
+        equipmentType: String,
+        pageProgress: Long
+    ) : PageProgress {
+        return PageProgress(
+            equipmentType = EquipmentType.valueOf(equipmentType),
+            page = pageProgress
+        )
+    }
+
+    fun insertPageProgress(pageProgress: PageProgress) {
+        dbQuery.insertPageProgress(
+            equipment_type = pageProgress.equipmentType.name,
+            page = pageProgress.page
+
         )
     }
 }

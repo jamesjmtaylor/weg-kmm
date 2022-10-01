@@ -5,6 +5,7 @@ package com.jamesjmtaylor.weg.models
 // val json          = Json(JsonConfiguration.Stable)
 // val searchResults = json.parse(SearchResults.serializer(), jsonString)
 
+import com.jamesjmtaylor.weg.EquipmentType
 import kotlinx.serialization.*
 
 @Serializable
@@ -46,5 +47,13 @@ data class Image (
     val name: String? = null,
     val url: String? = null
 )
+
+@Serializable
+data class PageProgress(
+    val equipmentType: EquipmentType,
+    val page: Long
+)
+
+
 
 

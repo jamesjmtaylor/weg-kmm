@@ -21,14 +21,14 @@ class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     fun landTabSelected() {
         _selectedTabLiveData.postValue(EquipmentType.LAND)
         viewModelScope.launch {
-            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.LAND))
+            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.LAND, 0))
         }
     }
 
     fun airTabSelected() {
         _selectedTabLiveData.postValue(EquipmentType.AIR)
         viewModelScope.launch {
-            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.AIR))
+            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.AIR, 1))
         }
 
     }
@@ -36,7 +36,7 @@ class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     fun seaTabSelected() {
         _selectedTabLiveData.postValue(EquipmentType.SEA)
         viewModelScope.launch {
-            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.SEA))
+            _equipmentLiveData.postValue(sdk.getEquipment(EquipmentType.SEA, 2))
         }
     }
 }

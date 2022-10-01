@@ -7,7 +7,7 @@ categories TEXT
 );
 
 insertResult:
-INSERT INTO search_result(title, equipment_id, categories)
+INSERT OR REPLACE INTO search_result(title, equipment_id, categories)
 VALUES(?,?,?);
 
 selectResultByEquipmentId:
@@ -29,7 +29,7 @@ url TEXT
 );
 
 insertImage:
-INSERT INTO image(equipment_id, name, url)
+INSERT OR REPLACE INTO image(equipment_id, name, url)
 VALUES(?,?,?);
 
 selectImagesByEquipmentId:
@@ -38,6 +38,22 @@ WHERE equipment_id = ?;
 
 removeAllImages:
 DELETE FROM image;
+
+CREATE TABLE page_progress (
+equipment_type TEXT NOT NULL PRIMARY KEY,
+page INTEGER NOT NULL
+);
+
+insertPageProgress:
+INSERT OR REPLACE INTO page_progress(equipment_type, page)
+VALUES(?,?);
+
+selectPageProgressByEquipmentType:
+SELECT * FROM page_progress
+WHERE equipment_type = ?;
+
+removeAllPageProgress:
+DELETE FROM page_progress;
 
 
 
