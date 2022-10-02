@@ -32,7 +32,6 @@ class EquipmentActivity : ComponentActivity() {
 
 @Composable
 fun EquipmentApp(viewModel: EquipmentViewModel) {
-    val equipmentState = viewModel.equipmentLiveData.observeAsState()
     WorldwideEquipmentGuideTheme {
         // A surface container using the 'background' color from the theme
         Scaffold(
@@ -40,7 +39,7 @@ fun EquipmentApp(viewModel: EquipmentViewModel) {
         ) { padding ->
             Column {
                 SearchBar()
-                EquipmentLazyVerticalGrid(equipmentState, Modifier.padding(padding))
+                EquipmentLazyVerticalGrid(viewModel.selectedFlow, Modifier.padding(padding))
             }
         }
     }

@@ -15,19 +15,20 @@ class Api {
         }
     }
 
-    suspend fun getEquipment(category: String, page: Int): SearchResults {
+    suspend fun getEquipmentSearchResults(category: String, page: Int): SearchResults {
         val equipmentURl = API_URL + "?format=json&" +
                 "action=query&" +
                 "list=searchG2&" +
                 "srimages=1&" +
                 "srsearch=incategory:$category&" +
-                "srlimit=${(page + 1) * 50}" +
-                "&sroffset=${(page) * 50}"
+                "srlimit=${(page + 1) * PAGE_SIZE}" +
+                "&sroffset=${(page) * PAGE_SIZE}"
         return httpClient.get(equipmentURl)
     }
 
     companion object {
         const val BASE_URL = "https://odin.tradoc.army.mil"
         const val API_URL = "$BASE_URL/mediawiki/api.php"
+        const val PAGE_SIZE = 50
     }
 }

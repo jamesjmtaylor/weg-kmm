@@ -19,6 +19,7 @@ dependencyResolutionManagement {
             version("ktor", "1.6.8")
             version("compose", "1.1.1")
             version("navigation", "2.5.1")
+            version("paging", "3.1.1")
 
             library("coroutines","org.jetbrains.kotlinx","kotlinx-coroutines-core").versionRef("coroutines")
             library("kotlin-stdlib", "org.jetbrains.kotlin", "kotlin-stdlib").versionRef("kotlin")
@@ -58,6 +59,8 @@ dependencyResolutionManagement {
             library("androidx-activity","androidx.activity","activity-compose").version("1.4.0")
 
             library("androidx-ui-test","androidx.compose.ui","ui-test-junit4").versionRef("compose")
+            library("androidx-paging", "androidx.paging","paging-runtime").versionRef("paging")
+            library("androidx-compose-paging", "androidx.paging", "paging-compose").version("1.0.0-alpha16")
 
         }
     }

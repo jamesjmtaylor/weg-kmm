@@ -4,11 +4,11 @@ plugins {
 }
 
 android {
-    compileSdk = 32
+    compileSdk = 33
     defaultConfig {
         applicationId = "com.jamesjmtaylor.weg.android"
         minSdk = 26
-        targetSdk = 32
+        targetSdk = 33
         versionCode = 1
         versionName = "1.0"
         vectorDrawables {
@@ -56,6 +56,8 @@ dependencies {
     implementation(libs.androidx.navigation.common)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.androidx.paging)
+    implementation(libs.androidx.compose.paging)
     //NOTE: Using the settings.gradle.ks file for these dependencies causes a 404.  This is probably
     //because unlike the other dependencies they have a "-" in the group (text before the first ":")
     implementation("io.coil-kt:coil:2.2.0")

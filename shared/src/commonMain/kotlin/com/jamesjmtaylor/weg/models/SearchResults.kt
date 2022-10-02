@@ -11,6 +11,9 @@ import kotlinx.serialization.*
 @Serializable
 data class SearchResults (
     val batchcomplete: String? = null,
+    /**
+     * This field is null if you paginate beyond the total hits
+     */
     @SerialName("continue")
     val searchResultsContinue: Continue? = null,
     val query: Query? = null
