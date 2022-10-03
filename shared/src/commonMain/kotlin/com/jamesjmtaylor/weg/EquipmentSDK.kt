@@ -7,11 +7,12 @@ import com.jamesjmtaylor.weg.network.Api
 import com.jamesjmtaylor.weg.network.Api.Companion.PAGE_SIZE
 import com.jamesjmtaylor.weg.shared.cache.Database
 import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
+import kotlin.math.min
 
 class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val db = Database(databaseDriverFactory)
     private val api = Api()
-
+    private var cache = emptyList<SearchResult>()
     private var totalLandHits : Int? = null
     private var totalAirHits : Int? = null
     private var totalSeaHits : Int? = null
@@ -24,30 +25,33 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
      */
     @Throws(Exception::class)
     suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int, forceReload: Boolean? = false): List<SearchResult>? {
-        //TODO: Implement in-memory cache.
         if (forceReload == true) db.clearDatabase()
 
         val type = equipmentType?.apiName ?: return null
         val cachedPage = db.getPageProgressFor(equipmentType)
-        val cachedEquipment = db.getAllResults().filter { it.categories.contains(type) }
 
-        if (pageLimitReached(equipmentType, page) || (cachedEquipment.isNotEmpty() && cachedPage >= page)) {
-             return cachedEquipment
+        if (pageLimitReached(equipmentType, page) ||  cachedPage >= page) {
+            if (cache.isEmpty()) cache = trimCategoryNames(db.getAllResults())
+
+            val typeFilteredCache = cache.filter { it.categories.contains(type) }
+            val fromIndex = min(typeFilteredCache.size, page * PAGE_SIZE)
+            val toIndex = min(typeFilteredCache.size, (page + 1) * PAGE_SIZE)
+            return typeFilteredCache.subList(fromIndex, toIndex)
         } else {
             val searchResults = api.getEquipmentSearchResults(type, page)
             persistTotalHits(equipmentType, searchResults)
             val listResults = searchResults.asList().also { results -> results?.let {
-                val trimmedResults = trimCategoryNames(results)
-                db.insertSearchResults(trimmedResults)
+                cache = cache.plus(results)
+                db.insertSearchResults(results)
                 db.insertPageProgress(PageProgress(equipmentType, page.toLong()))
             }}
-            return listResults?.plus(cachedEquipment)
+            return listResults
         }
     }
 
     /**
-     * Necessary because ODIN api has hidden characters in the category strings, preventing simple
-     * filtering from the database based on the selected bottom navigation equipment type.
+     * Necessary because DB adds hidden characters in the category strings, preventing simple
+     * filtering based on the selected bottom navigation equipment type.
      */
     private fun trimCategoryNames(results: List<SearchResult>): MutableList<SearchResult> {
         val trimmedResults = mutableListOf<SearchResult>()

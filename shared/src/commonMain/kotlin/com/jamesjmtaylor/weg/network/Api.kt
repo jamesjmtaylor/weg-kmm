@@ -21,14 +21,14 @@ class Api {
                 "list=searchG2&" +
                 "srimages=1&" +
                 "srsearch=incategory:$category&" +
-                "srlimit=${(page + 1) * PAGE_SIZE}" +
-                "&sroffset=${(page) * PAGE_SIZE}"
+                "srlimit=${PAGE_SIZE}" + //How many results to fetch
+                "&sroffset=${page * PAGE_SIZE}" //Where to start fetching results
         return httpClient.get(equipmentURl)
     }
 
     companion object {
         const val BASE_URL = "https://odin.tradoc.army.mil"
         const val API_URL = "$BASE_URL/mediawiki/api.php"
-        const val PAGE_SIZE = 50
+        const val PAGE_SIZE = 2
     }
 }
