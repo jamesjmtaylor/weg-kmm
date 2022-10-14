@@ -19,8 +19,9 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     /**
      * Retrieves equipment by category. NOTE: DB returns results in ascending id order. API returns
      * results using a consistent, but unknown, ordering system (id=2365 is always the first result).
-     * This can cause the order of equipment to shift between first and subsequent launches. It
-     * should not affect the
+     * This can cause the order of equipment to shift between first and subsequent launches. This is
+     * only a problem if new equipment is added to the API on a previously cached page. This edge
+     * case is minimized by the user's ability to [forceReload].
      * @param equipmentType the type of equipment to retrieve.
      * @param page the page number to retrieve for infinite scrolling support. 0-based index.
      * @param forceReload triggered by the user pulling up on the search results to force a page reload.
