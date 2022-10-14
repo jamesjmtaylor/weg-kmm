@@ -13,9 +13,8 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val db = Database(databaseDriverFactory)
     private val api = Api()
     private var cache = emptyList<SearchResult>()
-    private var totalLandHits : Int? = null
-    private var totalAirHits : Int? = null
-    private var totalSeaHits : Int? = null
+    private var cachedPageProgress = CachedPageProgress()
+    private var totalHits = TotalResults()
 
     /**
      * Retrieves equipment by category.
@@ -28,9 +27,9 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         if (forceReload == true) db.clearDatabase()
 
         val type = equipmentType?.apiName ?: return null
-        val cachedPage = db.getPageProgressFor(equipmentType)
+        val cachedPage = getPaginationProgress(equipmentType)
 
-        if (pageLimitReached(equipmentType, page) ||  cachedPage >= page) {
+        if (pageLimitReached(equipmentType, page) || cachedPage >= page) {
             if (cache.isEmpty()) cache = trimCategoryNames(db.getAllResults())
 
             val typeFilteredCache = cache.filter { it.categories.contains(type) }
@@ -42,6 +41,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
             persistTotalHits(equipmentType, searchResults)
             val listResults = searchResults.asList().also { results -> results?.let {
                 cache = cache.plus(results)
+                cachedPageProgress.setProgress(equipmentType, page)
                 db.insertSearchResults(results)
                 db.insertPageProgress(PageProgress(equipmentType, page.toLong()))
             }}
@@ -50,7 +50,21 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     }
 
     /**
-     * Necessary because DB adds hidden characters in the category strings, preventing simple
+     * Retrieves how many pages the app has pulled down from the backend so far.
+     */
+    private fun getPaginationProgress(equipmentType: EquipmentType) : Int {
+        val cachedProgress = cachedPageProgress.getProgress(equipmentType)
+        if (cachedProgress == null) {
+            val dbProgress = db.getPageProgressFor(equipmentType).toInt()
+            cachedPageProgress.setProgress(equipmentType,dbProgress)
+            return dbProgress
+        } else {
+            return cachedProgress
+        }
+    }
+
+    /**
+     * Necessary because SQL DB adds space characters in the category strings, preventing simple
      * filtering based on the selected bottom navigation equipment type.
      */
     private fun trimCategoryNames(results: List<SearchResult>): MutableList<SearchResult> {
@@ -73,17 +87,17 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         searchResults: SearchResults
     ) {
         when (equipmentType) {
-            EquipmentType.LAND -> totalLandHits = searchResults.query?.totalHits?.toInt()
-            EquipmentType.AIR -> totalAirHits = searchResults.query?.totalHits?.toInt()
-            EquipmentType.SEA -> totalSeaHits = searchResults.query?.totalHits?.toInt()
+            EquipmentType.LAND -> totalHits.land = searchResults.query?.totalHits?.toInt()
+            EquipmentType.AIR -> totalHits.air = searchResults.query?.totalHits?.toInt()
+            EquipmentType.SEA -> totalHits.sea = searchResults.query?.totalHits?.toInt()
         }
     }
 
     private fun pageLimitReached(equipmentType: EquipmentType, page: Int): Boolean {
         val totalHits = when (equipmentType) {
-            EquipmentType.LAND -> totalLandHits
-            EquipmentType.AIR -> totalAirHits
-            EquipmentType.SEA -> totalSeaHits
+            EquipmentType.LAND -> totalHits.land
+            EquipmentType.AIR -> totalHits.air
+            EquipmentType.SEA -> totalHits.sea
         } ?: return false //we haven't received any hits yet, continue pagination.
         return page * PAGE_SIZE > totalHits
     }
@@ -95,3 +109,20 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
  * based on how far the user has scrolled on a particular tab.
  */
 enum class EquipmentType(val apiName: String) { LAND("Land"), AIR("Air"), SEA("Sea") }
+data class TotalResults(var land: Int? = null, var air: Int? = null, var sea: Int? = null)
+data class CachedPageProgress(var land: Int? = null, var air: Int? = null, var sea: Int? = null) {
+    fun getProgress(equipmentType: EquipmentType): Int? {
+        return when (equipmentType) {
+            EquipmentType.LAND -> land
+            EquipmentType.AIR -> air
+            EquipmentType.SEA -> sea
+        }
+    }
+    fun setProgress(equipmentType: EquipmentType, progress: Int) {
+        when (equipmentType) {
+            EquipmentType.LAND -> land = progress
+            EquipmentType.AIR -> air = progress
+            EquipmentType.SEA -> sea = progress
+        }
+    }
+}

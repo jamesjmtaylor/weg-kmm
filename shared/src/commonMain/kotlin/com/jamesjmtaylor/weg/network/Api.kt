@@ -29,6 +29,6 @@ class Api {
     companion object {
         const val BASE_URL = "https://odin.tradoc.army.mil"
         const val API_URL = "$BASE_URL/mediawiki/api.php"
-        const val PAGE_SIZE = 2
+        const val PAGE_SIZE = 50
     }
 }
