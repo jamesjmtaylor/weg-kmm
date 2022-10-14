@@ -14,7 +14,8 @@ class Api {
             serializer = KotlinxSerializer(json)
         }
     }
-
+    //TODO: Implement search
+    //TODO: Implement equipment details
     suspend fun getEquipmentSearchResults(category: String, page: Int): SearchResults {
         val equipmentURl = API_URL + "?format=json&" +
                 "action=query&" +
@@ -29,6 +30,6 @@ class Api {
     companion object {
         const val BASE_URL = "https://odin.tradoc.army.mil"
         const val API_URL = "$BASE_URL/mediawiki/api.php"
-        const val PAGE_SIZE = 50
+        const val PAGE_SIZE = 10
     }
 }

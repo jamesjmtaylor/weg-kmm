@@ -17,10 +17,14 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private var totalHits = TotalResults()
 
     /**
-     * Retrieves equipment by category.
+     * Retrieves equipment by category. NOTE: DB returns results in ascending id order. API returns
+     * results using a consistent, but unknown, ordering system (id=2365 is always the first result).
+     * This can cause the order of equipment to shift between first and subsequent launches. It
+     * should not affect the
      * @param equipmentType the type of equipment to retrieve.
-     * @param page the page number to retrieve for infinite scrolling support.
+     * @param page the page number to retrieve for infinite scrolling support. 0-based index.
      * @param forceReload triggered by the user pulling up on the search results to force a page reload.
+     * @return a list of search results for the given page.
      */
     @Throws(Exception::class)
     suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int, forceReload: Boolean? = false): List<SearchResult>? {
@@ -29,7 +33,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         val type = equipmentType?.apiName ?: return null
         val cachedPage = getPaginationProgress(equipmentType)
 
-        if (pageLimitReached(equipmentType, page) || cachedPage >= page) {
+        if (noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
             if (cache.isEmpty()) cache = trimCategoryNames(db.getAllResults())
 
             val typeFilteredCache = cache.filter { it.categories.contains(type) }
@@ -93,7 +97,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    private fun pageLimitReached(equipmentType: EquipmentType, page: Int): Boolean {
+    private fun noMoreApiResults(equipmentType: EquipmentType, page: Int): Boolean {
         val totalHits = when (equipmentType) {
             EquipmentType.LAND -> totalHits.land
             EquipmentType.AIR -> totalHits.air

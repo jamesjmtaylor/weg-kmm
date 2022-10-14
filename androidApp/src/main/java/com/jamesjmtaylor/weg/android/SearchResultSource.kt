@@ -15,11 +15,11 @@ class SearchResultSource(val equipmentType: EquipmentType,
     }
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> {
         return try {
-            val nextPage = params.key ?: 1
+            val nextPage = params.key ?: 0
             val searchResultList = equipmentSDK.getEquipment(equipmentType, nextPage)!! //Safe b/c of try/catch block
             LoadResult.Page(
                 data = searchResultList,
-                prevKey = if (nextPage == 1) null else nextPage - 1,
+                prevKey = if (nextPage == 0) null else nextPage - 1,
                 nextKey = if (searchResultList.isEmpty()) null else nextPage + 1
             )
         } catch (exception: Exception) {

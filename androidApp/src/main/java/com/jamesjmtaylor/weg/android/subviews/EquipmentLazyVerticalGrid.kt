@@ -36,10 +36,7 @@ fun EquipmentLazyVerticalGrid(
         modifier = modifier.fillMaxHeight()
     ) {
         //TODO: Change flows when the user changes tabs
-        //TODO: Are items repeating themselves?  Why?
         items(searchResultListItems.itemCount) { index ->
-            //TODO: Fix "java.util.NoSuchElementException: List is empty." Commented fix prevents loading more.
-            //if (searchResultListItems.itemCount == 0) return@items
             val img = if (searchResultListItems.get(index)?.images?.firstOrNull()?.url.isNullOrEmpty())
                 null
             else

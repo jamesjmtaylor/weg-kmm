@@ -42,7 +42,6 @@ class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     fun airTabSelected() {
         _selectedTabLiveData.postValue(EquipmentType.AIR)
         selectedFlow = _airFlow
-
     }
 
     fun seaTabSelected() {
