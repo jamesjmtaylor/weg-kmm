@@ -15,8 +15,12 @@ import com.jamesjmtaylor.weg.models.SearchResult
 import com.jamesjmtaylor.weg.network.Api.Companion.PAGE_SIZE
 import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
 import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.launch
 
+/**
+ * Serves as a wrapper class for the compose views to retrieve data from the [EquipmentSDK].
+ * @param app used to instantiate the [EquipmentSDK].
+ * @property equipmentFlow used to cache & paginate the different equipemnt types.
+ */
 class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     private val sdk = EquipmentSDK(DatabaseDriverFactory(app))
 
@@ -29,23 +33,11 @@ class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     private val _seaFlow: Flow<PagingData<SearchResult>> = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
         SearchResultSource(EquipmentType.SEA, sdk)
     }.flow.cachedIn(viewModelScope)
-    var selectedFlow = _landFlow
+    var equipmentFlow = EquipmentFlow(_landFlow, _airFlow, _seaFlow)
 
-    private val _selectedTabLiveData = MutableLiveData<EquipmentType>()
-    val selectedTabLiveData : LiveData<EquipmentType> = _selectedTabLiveData
-
-    fun landTabSelected() {
-        _selectedTabLiveData.postValue(EquipmentType.LAND)
-        selectedFlow = _landFlow
-    }
-
-    fun airTabSelected() {
-        _selectedTabLiveData.postValue(EquipmentType.AIR)
-        selectedFlow = _airFlow
-    }
-
-    fun seaTabSelected() {
-        _selectedTabLiveData.postValue(EquipmentType.SEA)
-        selectedFlow = _seaFlow
-    }
+    data class EquipmentFlow(
+        val land: Flow<PagingData<SearchResult>>,
+        val air: Flow<PagingData<SearchResult>>,
+        val sea: Flow<PagingData<SearchResult>>
+    )
 }

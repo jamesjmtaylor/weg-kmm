@@ -1,6 +1,7 @@
 package com.jamesjmtaylor.weg.android.subviews
 
 import android.app.Application
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
@@ -16,6 +17,7 @@ import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.jamesjmtaylor.weg.android.EquipmentViewModel
+import com.jamesjmtaylor.weg.android.R
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.SearchResult
 import com.jamesjmtaylor.weg.network.Api
@@ -35,7 +37,6 @@ fun EquipmentLazyVerticalGrid(
         verticalArrangement = Arrangement.spacedBy(0.dp),
         modifier = modifier.fillMaxHeight()
     ) {
-        //TODO: Change flows when the user changes tabs
         items(searchResultListItems.itemCount) { index ->
             val img = if (searchResultListItems.get(index)?.images?.firstOrNull()?.url.isNullOrEmpty())
                 null

@@ -18,10 +18,10 @@ class Api {
     //TODO: Implement equipment details
     suspend fun getEquipmentSearchResults(category: String, page: Int): SearchResults {
         val equipmentURl = API_URL + "?format=json&" +
-                "action=query&" +
-                "list=searchG2&" +
-                "srimages=1&" +
-                "srsearch=incategory:$category&" +
+                "action=query&" + //Query, allowing search parameters
+                "list=searchG2&" + //Fetch from the G2 database
+                "srimages=1&" + //Fetch images with results
+                "srsearch=incategory:$category&" + //Filter search to just the provided category
                 "srlimit=${PAGE_SIZE}" + //How many results to fetch
                 "&sroffset=${page * PAGE_SIZE}" //Where to start fetching results
         return httpClient.get(equipmentURl)
