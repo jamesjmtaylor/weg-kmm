@@ -37,13 +37,10 @@ import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
 import kotlinx.coroutines.flow.Flow
 
 class EquipmentActivity : ComponentActivity() {
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val equipmentViewModel = ViewModelProvider(this).get(EquipmentViewModel::class.java)
-        setContent {
-            EquipmentApp(equipmentViewModel.equipmentFlow)
-        }
+        setContent { EquipmentApp(equipmentViewModel.equipmentFlow) }
     }
 }
 
@@ -77,7 +74,6 @@ fun EquipmentApp(equipment: EquipmentViewModel.EquipmentFlow) {
                 composable(Screen.Air.route) { EquipmentColumn(equipment.air, padding) }
                 composable(Screen.Sea.route) { EquipmentColumn(equipment.sea, padding) }
             }
-
         }
     }
 }

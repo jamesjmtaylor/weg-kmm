@@ -10,7 +10,8 @@ import com.jamesjmtaylor.weg.models.SearchResult
  * "internal" accessibility modifier means the Database is only accessible from within the
  * multiplatform module.
  *
- * NOTE: Do **not** try to manually alter either the [database] class or its nested [dbQuery] functions.
+ * NOTE: Do **not** try to manually alter either the implementation of the [database] property's
+ * [AppDatabase] class or its nested [dbQuery] functions.
  * These are auto-generated based off of the queries in the **AppDatabase.sq** file.
  */
 internal class Database(databaseDriverFactory: DatabaseDriverFactory) {

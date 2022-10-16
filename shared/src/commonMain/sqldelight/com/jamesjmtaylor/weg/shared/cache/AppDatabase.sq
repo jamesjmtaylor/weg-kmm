@@ -39,6 +39,45 @@ WHERE equipment_id = ?;
 removeAllImages:
 DELETE FROM image;
 
+CREATE TABLE search_result_details (
+equipment_id INTEGER NOT NULL,
+tiers TEXT,
+notes TEXT,
+date_of_introduction INTEGER,
+country_of_origin TEXT,
+proliferation TEXT
+);
+
+insertSearchResultDetails:
+INSERT OR REPLACE INTO search_result_details(equipment_id, tiers, notes, date_of_introduction, country_of_origin, proliferation)
+VALUES(?,?,?,?,?,?);
+
+selectEquipmentDetailsByEquipmentId:
+SELECT * FROM search_result_details
+WHERE equipment_id = ?;
+
+removeAllEquipmentDetails:
+DELETE FROM search_result_details;
+
+CREATE TABLE search_results_properties (
+equipment_id INTEGER NOT NULL,
+section_name TEXT,
+properties_name TEXT,
+properties_value TEXT
+);
+
+insertSearchResultProperties:
+INSERT OR REPLACE INTO search_results_properties(equipment_id, section_name, properties_name, properties_value)
+VALUES(?,?,?,?);
+
+selectSearchResultPropertiesByEquipmentId:
+SELECT * FROM search_results_properties
+WHERE equipment_id = ?;
+
+removeAllSearchResultProperties:
+DELETE FROM search_results_properties;
+
+
 CREATE TABLE page_progress (
 equipment_type TEXT NOT NULL PRIMARY KEY,
 page INTEGER NOT NULL

@@ -30,7 +30,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     @Throws(Exception::class)
     suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int, forceReload: Boolean? = false): List<SearchResult>? {
         if (forceReload == true) db.clearDatabase()
-
+        api.getEquipmentById(10933)
         val type = equipmentType?.apiName ?: return null
         val cachedPage = getPaginationProgress(equipmentType)
 

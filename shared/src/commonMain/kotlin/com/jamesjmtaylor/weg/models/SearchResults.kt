@@ -38,11 +38,40 @@ data class Query (
 )
 
 @Serializable
+@SerialName("parseG2")
+data class ParseG2 (
+    val searchResult: SearchResult? = null
+)
+
+@Serializable
 data class SearchResult (
     val title: String? = null,
     val id: Long = 0,
     val categories: List<String> = emptyList(),
-    val images: List<Image> = emptyList()
+    val images: List<Image> = emptyList(),
+    val json: SearchResultDetails? = null
+)
+
+@Serializable
+data class SearchResultDetails (
+    val tiers: List<Boolean> = emptyList(),
+    val notes: String? = null,
+    val dateOfIntroduction: Long? = null,
+    val countryOfOrigin: String? = null,
+    val proliferation: String? = null,
+    val sections: List<DetailsSections> = emptyList()
+)
+
+@Serializable
+data class DetailsSections (
+    val name: String? = null,
+    val properties: List<SectionProperties> = emptyList()
+)
+
+@Serializable
+data class SectionProperties (
+    val name: String? = null,
+    val value: String? = null
 )
 
 @Serializable
