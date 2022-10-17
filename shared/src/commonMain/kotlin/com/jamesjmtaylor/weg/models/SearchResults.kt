@@ -38,40 +38,51 @@ data class Query (
 )
 
 @Serializable
-@SerialName("parseG2")
-data class ParseG2 (
-    val searchResult: SearchResult? = null
+data class ParseG2Response (
+    val parseG2: SearchResult
 )
 
 @Serializable
 data class SearchResult (
     val title: String? = null,
-    val id: Long = 0,
+    val id: Long,
     val categories: List<String> = emptyList(),
-    val images: List<Image> = emptyList(),
-    val json: SearchResultDetails? = null
+    val images: List<Image>,
+    @SerialName("json")
+    val details: SearchResultDetails? = null
 )
 
 @Serializable
 data class SearchResultDetails (
-    val tiers: List<Boolean> = emptyList(),
-    val notes: String? = null,
-    val dateOfIntroduction: Long? = null,
-    val countryOfOrigin: String? = null,
-    val proliferation: String? = null,
-    val sections: List<DetailsSections> = emptyList()
+    val tiers: List<Boolean>,
+    val notes: String,
+    val dateOfIntroduction: Long,
+    val countryOfOrigin: String,
+    val proliferation: String,
+    val selectedregions: List<String>,
+    val checkedcountries: List<String>,
+    val sections: List<Section>,
+    val variants: List<Variant>,
+    val type: String,
+    val version: Long
 )
 
 @Serializable
-data class DetailsSections (
-    val name: String? = null,
-    val properties: List<SectionProperties> = emptyList()
+data class Section (
+    val name: String,
+    val properties: List<Property>
 )
 
 @Serializable
-data class SectionProperties (
-    val name: String? = null,
-    val value: String? = null
+data class Property (
+    val name: String,
+    val value: String
+)
+
+@Serializable
+data class Variant (
+    val name: String,
+    val notes: String
 )
 
 @Serializable
