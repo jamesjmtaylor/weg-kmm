@@ -28,7 +28,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
      * @return a list of search results for the given page.
      */
     @Throws(Exception::class)
-    suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int, forceReload: Boolean? = false): List<SearchResult>? {
+    suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int = 0, forceReload: Boolean? = false): List<SearchResult>? {
         if (forceReload == true) db.clearDatabase()
         val type = equipmentType?.apiName ?: return null
         val cachedPage = getPaginationProgress(equipmentType)

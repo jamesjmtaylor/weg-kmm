@@ -16,18 +16,17 @@ class Api {
             serializer = KotlinxSerializer(json)
         }
     }
-    //TODO: Implement search
-    //TODO: Implement equipment details
+
     suspend fun getEquipmentSearchResults(category: String, page: Int, searchTerm: String? = null): SearchResults {
-        val srSearch = if (searchTerm != null)
+        val srSearch = if (searchTerm != null)  //Filter search to category & searchTerm
             "srsearch=intitle:$searchTerm+incategory:$category&"
-        else
+        else  //Filter search to just the provided category
             "srsearch=incategory:$category&"
         val searchURl = API_URL + "?format=json&" +
                 "action=query&" + //Query, allowing search parameters
                 "list=searchG2&" + //Fetch from the G2 database
                 "srimages=1&" + //Fetch images with results
-                "srsearch=incategory:$category&" + //Filter search to just the provided category
+                srSearch +
                 "srlimit=${PAGE_SIZE}" + //How many results to fetch
                 "&sroffset=${page * PAGE_SIZE}" //Where to start fetching results
         return httpClient.get(searchURl)

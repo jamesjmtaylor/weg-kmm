@@ -2,11 +2,9 @@ package com.jamesjmtaylor.weg.android
 
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
-import coil.network.HttpException
 import com.jamesjmtaylor.weg.EquipmentSDK
 import com.jamesjmtaylor.weg.EquipmentType
 import com.jamesjmtaylor.weg.models.SearchResult
-import okio.IOException
 
 class SearchResultSource(val equipmentType: EquipmentType,
                       val equipmentSDK: EquipmentSDK) : PagingSource<Int, SearchResult>() {
