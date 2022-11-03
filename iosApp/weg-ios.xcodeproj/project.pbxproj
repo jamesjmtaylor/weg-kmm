@@ -9,25 +9,29 @@
 /* Begin PBXBuildFile section */
 		058557BB273AAA24004C7B11 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557BA273AAA24004C7B11 /* Assets.xcassets */; };
 		058557D9273AAEEB004C7B11 /* Preview Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */; };
-		2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* iOSApp.swift */; };
-		545259CB28AD3217008D995F /* EquipmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545259CA28AD3217008D995F /* EquipmentViewModel.swift */; };
+		2152FB042600AC8F00CF470E /* WegApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2152FB032600AC8F00CF470E /* WegApp.swift */; };
+		545259CB28AD3217008D995F /* PreviewEquipmentViewModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545259CA28AD3217008D995F /* PreviewEquipmentViewModel.swift */; };
 		54BCD0B72912A83100F7648D /* EquipmentCard.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54BCD0B62912A83100F7648D /* EquipmentCard.swift */; };
-		6555ECA63714AC9E305175BF /* Pods_iosApp.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = DBE96231CDDBE3761523DD3D /* Pods_iosApp.framework */; };
+		54C6CF02291405790081784B /* EquipmentLazyVGrid.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54C6CF01291405790081784B /* EquipmentLazyVGrid.swift */; };
 		7555FF83242A565900829871 /* EquipmentView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7555FF82242A565900829871 /* EquipmentView.swift */; };
+		785E633A17A0C84C1E0CB1DB /* Pods_weg_ios.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = C3F4257E97FA3B358452A608 /* Pods_weg_ios.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
 		058557BA273AAA24004C7B11 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		058557D8273AAEEB004C7B11 /* Preview Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = "Preview Assets.xcassets"; sourceTree = "<group>"; };
-		2152FB032600AC8F00CF470E /* iOSApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSApp.swift; sourceTree = "<group>"; };
-		545259CA28AD3217008D995F /* EquipmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentViewModel.swift; sourceTree = "<group>"; };
+		14F9E0986EB46DC72374EA73 /* Pods-weg-ios.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weg-ios.release.xcconfig"; path = "Target Support Files/Pods-weg-ios/Pods-weg-ios.release.xcconfig"; sourceTree = "<group>"; };
+		2152FB032600AC8F00CF470E /* WegApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WegApp.swift; sourceTree = "<group>"; };
+		545259CA28AD3217008D995F /* PreviewEquipmentViewModel.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PreviewEquipmentViewModel.swift; sourceTree = "<group>"; };
 		54BCD0B62912A83100F7648D /* EquipmentCard.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentCard.swift; sourceTree = "<group>"; };
+		54C6CF01291405790081784B /* EquipmentLazyVGrid.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentLazyVGrid.swift; sourceTree = "<group>"; };
 		7555FF7B242A565900829871 /* weg-ios.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "weg-ios.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7555FF82242A565900829871 /* EquipmentView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EquipmentView.swift; sourceTree = "<group>"; };
 		7555FF8C242A565B00829871 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		868C9FEA3CE0D87BF81E5E86 /* Pods-iosApp.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.debug.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.debug.xcconfig"; sourceTree = "<group>"; };
 		8E29324A5EEC009E686F2725 /* Pods-iosApp.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-iosApp.release.xcconfig"; path = "Target Support Files/Pods-iosApp/Pods-iosApp.release.xcconfig"; sourceTree = "<group>"; };
-		DBE96231CDDBE3761523DD3D /* Pods_iosApp.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_iosApp.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		C3F4257E97FA3B358452A608 /* Pods_weg_ios.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_weg_ios.framework; sourceTree = BUILT_PRODUCTS_DIR; };
+		D64AC931EE2228954A6A6462 /* Pods-weg-ios.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-weg-ios.debug.xcconfig"; path = "Target Support Files/Pods-weg-ios/Pods-weg-ios.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -35,7 +39,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				6555ECA63714AC9E305175BF /* Pods_iosApp.framework in Frameworks */,
+				785E633A17A0C84C1E0CB1DB /* Pods_weg_ios.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -53,7 +57,7 @@
 		0A9E9CEFA30B739CAA3DB187 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				DBE96231CDDBE3761523DD3D /* Pods_iosApp.framework */,
+				C3F4257E97FA3B358452A608 /* Pods_weg_ios.framework */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -62,6 +66,7 @@
 			isa = PBXGroup;
 			children = (
 				54BCD0B62912A83100F7648D /* EquipmentCard.swift */,
+				54C6CF01291405790081784B /* EquipmentLazyVGrid.swift */,
 			);
 			path = Subviews;
 			sourceTree = "<group>";
@@ -90,10 +95,10 @@
 				54BCD0B52912A77900F7648D /* Subviews */,
 				058557BA273AAA24004C7B11 /* Assets.xcassets */,
 				7555FF82242A565900829871 /* EquipmentView.swift */,
+				545259CA28AD3217008D995F /* PreviewEquipmentViewModel.swift */,
 				7555FF8C242A565B00829871 /* Info.plist */,
-				2152FB032600AC8F00CF470E /* iOSApp.swift */,
+				2152FB032600AC8F00CF470E /* WegApp.swift */,
 				058557D7273AAEEB004C7B11 /* Preview Content */,
-				545259CA28AD3217008D995F /* EquipmentViewModel.swift */,
 			);
 			path = "weg-ios";
 			sourceTree = "<group>";
@@ -103,6 +108,8 @@
 			children = (
 				868C9FEA3CE0D87BF81E5E86 /* Pods-iosApp.debug.xcconfig */,
 				8E29324A5EEC009E686F2725 /* Pods-iosApp.release.xcconfig */,
+				D64AC931EE2228954A6A6462 /* Pods-weg-ios.debug.xcconfig */,
+				14F9E0986EB46DC72374EA73 /* Pods-weg-ios.release.xcconfig */,
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -181,15 +188,15 @@
 			files = (
 			);
 			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-input-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-weg-ios/Pods-weg-ios-frameworks-${CONFIGURATION}-input-files.xcfilelist",
 			);
 			name = "[CP] Embed Pods Frameworks";
 			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks-${CONFIGURATION}-output-files.xcfilelist",
+				"${PODS_ROOT}/Target Support Files/Pods-weg-ios/Pods-weg-ios-frameworks-${CONFIGURATION}-output-files.xcfilelist",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-iosApp/Pods-iosApp-frameworks.sh\"\n";
+			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-weg-ios/Pods-weg-ios-frameworks.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 		39CE4F41EBAE3582E9AA09EE /* [CP] Check Pods Manifest.lock */ = {
@@ -207,7 +214,7 @@
 			outputFileListPaths = (
 			);
 			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-iosApp-checkManifestLockResult.txt",
+				"$(DERIVED_FILE_DIR)/Pods-weg-ios-checkManifestLockResult.txt",
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
@@ -221,9 +228,10 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54C6CF02291405790081784B /* EquipmentLazyVGrid.swift in Sources */,
 				54BCD0B72912A83100F7648D /* EquipmentCard.swift in Sources */,
-				2152FB042600AC8F00CF470E /* iOSApp.swift in Sources */,
-				545259CB28AD3217008D995F /* EquipmentViewModel.swift in Sources */,
+				2152FB042600AC8F00CF470E /* WegApp.swift in Sources */,
+				545259CB28AD3217008D995F /* PreviewEquipmentViewModel.swift in Sources */,
 				7555FF83242A565900829871 /* EquipmentView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -349,7 +357,7 @@
 		};
 		7555FFA6242A565B00829871 /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 868C9FEA3CE0D87BF81E5E86 /* Pods-iosApp.debug.xcconfig */;
+			baseConfigurationReference = D64AC931EE2228954A6A6462 /* Pods-weg-ios.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
@@ -370,7 +378,7 @@
 		};
 		7555FFA7242A565B00829871 /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 8E29324A5EEC009E686F2725 /* Pods-iosApp.release.xcconfig */;
+			baseConfigurationReference = 14F9E0986EB46DC72374EA73 /* Pods-weg-ios.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;

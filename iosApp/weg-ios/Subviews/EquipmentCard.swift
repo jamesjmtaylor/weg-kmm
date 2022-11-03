@@ -7,24 +7,25 @@
 //
 
 import SwiftUI
+import shared
 
 struct EquipmentCard: View {
-    var imageUrl: String
-    var text: String
+    var equipment: SearchResult
     var body: some View {
-        ZStack(alignment: .bottomLeading) {
-            Text(text)
-            let url = URL(string: imageUrl)
+        ZStack(alignment: .bottom) {
+            let url = URL(string: equipment.images.first?.url ?? "")
             AsyncImage(url: url) { image in
                 image.resizable()
             } placeholder: {
                 Image("placeholder")
             }
+            Text(equipment.title ?? "")
         }}
 }
 
 struct EquipmentCard_Previews: PreviewProvider {
     static var previews: some View {
-        EquipmentCard(imageUrl: "", text: "Test")
+        let placeholder = SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil)
+        EquipmentCard(equipment: placeholder)
     }
 }

@@ -2,11 +2,11 @@ import SwiftUI
 import shared
 
 struct EquipmentView: View {
-    @ObservedObject private(set) var vm: EquipmentViewModel
+    @ObservedObject private(set) var vm: PreviewEquipmentViewModel
 	var body: some View {
         
         TabView {
-            Text("Results: \(vm.equipment.count)")
+            EquipmentLazyVGrid(vm: vm)
                 .tabItem{
                     Image("ic_land")
                     Text("Land")
@@ -17,8 +17,9 @@ struct EquipmentView: View {
 
 
 
-//struct ContentView_Previews: PreviewProvider {
-//	static var previews: some View {
-//		ContentView()
-//	}
-//}
+struct ContentView_Previews: PreviewProvider {
+	static var previews: some View {
+        let vm = PreviewEquipmentViewModel(equipment: WegApp.placeholderEquipment)
+        EquipmentView(vm: vm)
+	}
+}
