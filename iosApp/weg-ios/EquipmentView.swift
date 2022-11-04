@@ -11,6 +11,16 @@ struct EquipmentView: View {
                     Image("ic_land")
                     Text("Land")
                 }
+            EquipmentLazyVGrid(vm: vm)
+                .tabItem{
+                    Image("ic_air")
+                    Text("Air")
+                }
+            EquipmentLazyVGrid(vm: vm)
+                .tabItem{
+                    Image("ic_sea")
+                    Text("Sea")
+                }
         }
 	}
 }
