@@ -38,13 +38,9 @@ fun EquipmentLazyVerticalGrid(
         modifier = modifier.fillMaxHeight()
     ) {
         items(searchResultListItems.itemCount) { index ->
-            val img = if (searchResultListItems.get(index)?.images?.firstOrNull()?.url.isNullOrEmpty())
-                null
-            else
-                Api.BASE_URL + searchResultListItems[index]?.images?.firstOrNull()?.url
             val text = searchResultListItems[index]?.title
             EquipmentCard(
-                imgUrl = img,
+                imgUrl = searchResultListItems[index]?.images?.firstOrNull()?.url,
                 text = text,
                 modifier = Modifier.height(150.dp)
             )

@@ -88,7 +88,7 @@ data class Variant (
 @Serializable
 data class Image (
     val name: String? = null,
-    val url: String? = null
+    var url: String? = null
 )
 
 @Serializable
