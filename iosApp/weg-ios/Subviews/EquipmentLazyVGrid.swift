@@ -16,19 +16,20 @@ struct EquipmentLazyVGrid: View {
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     var body: some View {
         ScrollView {
-            LazyVGrid(columns: getColumns()) {
+            LazyVGrid(columns: getColumns(), spacing: 0) {
                 ForEach (vm.equipment, id: \.id) { equipment in
                     EquipmentCard(equipment: equipment)
                 }
             }
         }
     }
-    //TODO: Figure out why numColumns isn't working as expected.
+
     func getColumns() -> [GridItem] {
         var columns = [GridItem]()
-        let numColumns = horizontalSizeClass == .compact ? 1 : 4
-        for _ in 0...numColumns {
-            columns.append(GridItem(.flexible()))
+    
+        let numColumns = horizontalSizeClass == .compact ? 2 : 4
+        for _ in 1...numColumns {
+            columns.append(GridItem(.flexible(),spacing: 0))
         }
         return columns
     }

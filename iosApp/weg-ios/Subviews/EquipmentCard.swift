@@ -16,8 +16,11 @@ struct EquipmentCard: View {
             let url = URL(string: equipment.images.first?.url ?? "")
             AsyncImage(url: url) { image in
                 image.resizable()
+                    .aspectRatio(1, contentMode: .fit)
             } placeholder: {
                 Image("placeholder")
+                    .resizable()
+                    .aspectRatio(1, contentMode: .fit)
             }
             Text(equipment.title ?? "")
         }}
