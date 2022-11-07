@@ -40,7 +40,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
         val groupedList = mutableListOf<SearchResult>()
         for (group in groupedMap) {
             val result = group.value.first()
-            val groupedImages = group.value.flatMap { it.images }
+            val groupedImages = group.value.flatMap { it.images ?: emptyList() }
             groupedList.add(SearchResult(result.title, result.id, result.categories, groupedImages ))
         }
         return groupedList
@@ -58,7 +58,7 @@ internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
     }
 
     private fun insertImages(result: SearchResult) {
-        result.images.forEach { image ->
+        result.images?.forEach { image ->
             dbQuery.insertImage(
                 name = image.name,
                 equipment_id = result.id,

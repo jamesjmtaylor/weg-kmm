@@ -6,7 +6,7 @@ struct WegApp: App {
     let sdk = EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory())
 	var body: some Scene {
         WindowGroup<EquipmentView> {
-            EquipmentView(vm: SdkEquipmentViewModel(sdk: sdk))
+            EquipmentView(vm: EquipmentViewModel(sdk: sdk))
 		}
 	}
     

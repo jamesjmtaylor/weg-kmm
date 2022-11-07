@@ -9,19 +9,30 @@
 import SwiftUI
 import shared
 
-//TODO: Implement infinite scroll per https://medium.com/swlh/easy-pagination-in-swiftui-da9e1fe3e25e
+
+//TODO: Pull to refresh
+
 struct EquipmentLazyVGrid: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject private(set) var vm: PreviewEquipmentViewModel
+    @State private var searchText = ""
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     var body: some View {
-        ScrollView {
-            LazyVGrid(columns: getColumns(), spacing: 0) {
-                ForEach (vm.equipment, id: \.id) { equipment in
-                    EquipmentCard(equipment: equipment)
+        NavigationView{
+            ScrollView {
+                LazyVGrid(columns: getColumns(), spacing: 0) {
+                    ForEach (vm.equipment, id: \.id) { equipment in
+                        EquipmentCard(equipment: equipment)
+                    }
+                    if vm.equipmentListFull == false {
+                        ProgressView()
+                            .onAppear {
+                                vm.loadEquipment(forceReload: false)
+                            }
+                    }
                 }
             }
-        }
+        }.searchable(text: $searchText, prompt: "Search Equipment")
     }
 
     func getColumns() -> [GridItem] {

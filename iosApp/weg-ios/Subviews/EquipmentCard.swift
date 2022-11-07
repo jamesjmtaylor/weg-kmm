@@ -13,7 +13,7 @@ struct EquipmentCard: View {
     var equipment: SearchResult
     var body: some View {
         ZStack(alignment: .bottom) {
-            let url = URL(string: equipment.images.first?.url ?? "")
+            let url = URL(string: equipment.images?.first?.url ?? "")
             AsyncImage(url: url) { image in
                 image.resizable()
                     .aspectRatio(1, contentMode: .fit)

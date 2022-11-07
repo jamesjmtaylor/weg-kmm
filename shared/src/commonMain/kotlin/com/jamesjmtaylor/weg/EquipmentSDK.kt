@@ -44,7 +44,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
             val searchResults = api.getEquipmentSearchResults(type, page)
             persistTotalHits(equipmentType, searchResults)
             val listResults = searchResults.asList().also { results -> results?.let {
-                results.map { it.images.map { it.url = Api.BASE_URL + it.url } }
+                results.map { it.images?.map { it.url = Api.BASE_URL + it.url } }
                 cache = cache.plus(results)
                 cachedPageProgress.setProgress(equipmentType, page)
                 db.insertSearchResults(results)

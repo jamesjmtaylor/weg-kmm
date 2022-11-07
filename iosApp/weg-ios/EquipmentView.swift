@@ -4,7 +4,7 @@ import shared
 struct EquipmentView: View {
     @ObservedObject private(set) var vm: PreviewEquipmentViewModel
 	var body: some View {
-        
+        //TODO: Return different results based on tab selection
         TabView {
             EquipmentLazyVGrid(vm: vm)
                 .tabItem{

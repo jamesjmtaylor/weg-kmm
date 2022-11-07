@@ -47,7 +47,7 @@ data class SearchResult (
     val title: String? = null,
     val id: Long,
     val categories: List<String> = emptyList(),
-    val images: List<Image>,
+    val images: List<Image>? = null,
     @SerialName("json")
     val details: SearchResultDetails? = null
 )

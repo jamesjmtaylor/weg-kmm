@@ -19,7 +19,7 @@ import kotlinx.coroutines.flow.Flow
 /**
  * Serves as a wrapper class for the compose views to retrieve data from the [EquipmentSDK].
  * @param app used to instantiate the [EquipmentSDK].
- * @property equipmentFlow used to cache & paginate the different equipemnt types.
+ * @property equipmentFlow used to paginate the different equipment types.
  */
 class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     private val sdk = EquipmentSDK(DatabaseDriverFactory(app))

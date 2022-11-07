@@ -40,12 +40,12 @@ class EquipmentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val equipmentViewModel = ViewModelProvider(this).get(EquipmentViewModel::class.java)
-        setContent { EquipmentApp(equipmentViewModel.equipmentFlow) }
+        setContent { EquipmentScreen(equipmentViewModel.equipmentFlow) }
     }
 }
 
 @Composable
-fun EquipmentApp(equipment: EquipmentViewModel.EquipmentFlow) {
+fun EquipmentScreen(equipment: EquipmentViewModel.EquipmentFlow) {
     WorldwideEquipmentGuideTheme {// A surface container using the 'background' color from the theme
         val navController = rememberNavController()
         val screens = listOf(Screen.Land,Screen.Air, Screen.Sea)
@@ -101,6 +101,6 @@ fun PreviewEquipmentScreen() {
             SearchResultSource(EquipmentType.LAND, sdk)
         }.flow
         val equipmentFlow = EquipmentViewModel.EquipmentFlow(land, air, sea)
-        EquipmentApp(equipmentFlow)
+        EquipmentScreen(equipmentFlow)
     }
 }
