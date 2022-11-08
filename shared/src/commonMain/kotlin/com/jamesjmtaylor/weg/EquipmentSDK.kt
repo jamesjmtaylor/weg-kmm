@@ -54,19 +54,21 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
+    //Implement https://github.com/kuuuurt/multiplatform-paging
     /**
-     * Retrieves how many pages the app has pulled down from the backend so far.
+     * Retrieves how many pages the app has pulled down from the backend so far.  Page number is
+     * persisted by equipment type and doesn't need to be managed by the client.
      */
-    private fun getPaginationProgress(equipmentType: EquipmentType) : Int {
-        val cachedProgress = cachedPageProgress.getProgress(equipmentType)
-        if (cachedProgress == null) {
-            val dbProgress = db.getPageProgressFor(equipmentType).toInt()
-            cachedPageProgress.setProgress(equipmentType,dbProgress)
-            return dbProgress
-        } else {
-            return cachedProgress
-        }
-    }
+//    private fun getEquipment(equipmentType: EquipmentType): CommonFlow<List<SearchResult>> = flow {
+//        val cachedProgress = cachedPageProgress.getProgress(equipmentType)
+//        if (cachedProgress == null) {
+//            val dbProgress = db.getPageProgressFor(equipmentType).toInt()
+//            cachedPageProgress.setProgress(equipmentType,dbProgress)
+//            return dbProgress
+//        } else {
+//            return cachedProgress
+//        }
+//    }
 
     /**
      * Necessary because SQL DB adds space characters in the category strings, preventing simple
