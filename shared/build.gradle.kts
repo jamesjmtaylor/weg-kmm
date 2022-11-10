@@ -26,6 +26,8 @@ kotlin {
             //See https://github.com/cashapp/sqldelight/issues/2512#issuecomment-937699879
             //NOTE: If you get `dyld: Library not loaded` try running `pod install` from ./iosApp/
             isStatic = false
+
+            export(libs.multiplatform.paging)
         }
     }
 
@@ -43,6 +45,10 @@ kotlin {
                 implementation(libs.ktor.json)
                 implementation(libs.ktor.logging)
                 implementation(libs.ktor.serialization)
+
+                // Paging
+                implementation(libs.multiplatform.paging)
+                api(libs.multiplatform.paging)
             }
         }
         val commonTest by getting {

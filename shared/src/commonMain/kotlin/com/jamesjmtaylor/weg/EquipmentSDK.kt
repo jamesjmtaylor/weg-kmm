@@ -31,7 +31,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     suspend fun getEquipment(equipmentType: EquipmentType? = null, page: Int = 0, forceReload: Boolean? = false): List<SearchResult>? {
         if (forceReload == true) db.clearDatabase()
         val type = equipmentType?.apiName ?: return null
-        val cachedPage = getPaginationProgress(equipmentType)
+        val cachedPage = cachedPageProgress.getProgress(equipmentType) ?: 0
 
         if (noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
             if (cache.isEmpty()) cache = trimCategoryNames(db.getAllResults())
