@@ -14,7 +14,7 @@ import com.jamesjmtaylor.weg.models.SearchResult
  * [AppDatabase] class or its nested [dbQuery] functions.
  * These are auto-generated based off of the queries in the **AppDatabase.sq** file.
  */
-internal class Database(databaseDriverFactory: DatabaseDriverFactory) {
+class Database(databaseDriverFactory: DatabaseDriverFactory) {
     private val database = AppDatabase(databaseDriverFactory.createDriver())
     private val dbQuery = database.appDatabaseQueries
 

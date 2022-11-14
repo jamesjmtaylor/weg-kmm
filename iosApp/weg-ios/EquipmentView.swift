@@ -29,7 +29,8 @@ struct EquipmentView: View {
 
 struct ContentView_Previews: PreviewProvider {
 	static var previews: some View {
-        let vm = PreviewEquipmentViewModel(equipment: WegApp.placeholderEquipment)
+        let vm = PreviewEquipmentViewModel()
+//        vm.equipment = WegApp.placeholderEquipment
         EquipmentView(vm: vm)
 	}
 }

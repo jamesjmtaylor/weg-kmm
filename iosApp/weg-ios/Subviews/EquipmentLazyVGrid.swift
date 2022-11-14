@@ -16,6 +16,7 @@ struct EquipmentLazyVGrid: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject private(set) var vm: PreviewEquipmentViewModel
     @State private var searchText = ""
+    
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
     var body: some View {
         NavigationView{
@@ -24,15 +25,28 @@ struct EquipmentLazyVGrid: View {
                     ForEach (vm.equipment, id: \.id) { equipment in
                         EquipmentCard(equipment: equipment)
                     }
-                    if vm.equipmentListFull == false {
-                        ProgressView()
-                            .onAppear {
-                                vm.loadEquipment(forceReload: false)
-                            }
+                    if vm.hasNextPage {
+                        nextPageView
                     }
                 }
             }
-        }.searchable(text: $searchText, prompt: "Search Equipment")
+        }
+        .searchable(text: $searchText, prompt: "Search Equipment")
+        .onAppear { vm.fetchEquipment() }
+    }
+    
+    private var nextPageView: some View {
+        HStack {
+            Spacer()
+            VStack {
+                ProgressView()
+                Text("Loading next page...")
+            }
+            Spacer()
+        }
+        .onAppear(perform: {
+            vm.fetchNextData()
+        })
     }
 
     func getColumns() -> [GridItem] {
@@ -48,7 +62,8 @@ struct EquipmentLazyVGrid: View {
 
 struct EquipmentLazyVGrid_Previews: PreviewProvider {
     static var previews: some View {
-        let vm = PreviewEquipmentViewModel(equipment: WegApp.placeholderEquipment)
+        let vm = PreviewEquipmentViewModel()
+//        vm.equipment = WegApp.placeholderEquipment
         EquipmentLazyVGrid(vm: vm)
     }
 }

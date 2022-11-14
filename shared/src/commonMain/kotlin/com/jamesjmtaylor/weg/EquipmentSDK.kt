@@ -7,14 +7,71 @@ import com.jamesjmtaylor.weg.network.Api
 import com.jamesjmtaylor.weg.network.Api.Companion.PAGE_SIZE
 import com.jamesjmtaylor.weg.shared.cache.Database
 import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
+import com.kuuurt.paging.multiplatform.Pager
+import com.kuuurt.paging.multiplatform.PagingConfig
+import com.kuuurt.paging.multiplatform.PagingData
+import com.kuuurt.paging.multiplatform.PagingResult
+import com.kuuurt.paging.multiplatform.helpers.cachedIn
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlin.math.max
 import kotlin.math.min
 
 class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val db = Database(databaseDriverFactory)
     private val api = Api()
+    private val clientScope = CoroutineScope(Dispatchers.Default)
+
     private var cache = emptyList<SearchResult>()
     private var cachedPageProgress = CachedPageProgress()
     private var totalHits = TotalResults()
+
+    var hasNextPage = true
+    //TODO: Implement pagers for other equipment types
+    val pager = Pager(
+        clientScope = clientScope,
+        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
+        initialKey = 0, // Key to use when initialized
+        getItems = { currentKey, _ ->
+            val items = getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
+            PagingResult(
+                items = items,
+                currentKey = currentKey,
+                prevKey = { max(currentKey - 1,0) },
+                nextKey = { currentKey + 1 }
+            )
+        }
+    )
+
+    val pagingData: CommonFlow<PagingData<SearchResult>>
+        get() = pager.pagingData
+            .cachedIn(clientScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
+            .asCommonFlow() // So that iOS can consume the Flow
+
+
+    @Throws(Exception::class)
+    suspend fun getEquipmentNoCache(equipmentType: EquipmentType? = null, page: Int = 0, forceReload: Boolean? = false): List<SearchResult>? {
+        if (forceReload == true) db.clearDatabase()
+        val type = equipmentType?.apiName ?: return null
+        val cachedPage = cachedPageProgress.getProgress(equipmentType) ?: 0
+
+        if (noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
+            var filtered = trimCategoryNames(db.getAllResults()).filter { it.categories.contains(type) }
+            val fromIndex = min(filtered.size, page * PAGE_SIZE)
+            val toIndex = min(filtered.size, (page + 1) * PAGE_SIZE)
+            return filtered.subList(fromIndex, toIndex)
+        } else {
+            val searchResults = api.getEquipmentSearchResults(type, page)
+            persistTotalHits(equipmentType, searchResults)
+            val listResults = searchResults.asList().also { results -> results?.let {
+                results.map { r -> r.images?.map { it.url = Api.BASE_URL + it.url } }
+                cachedPageProgress.setProgress(equipmentType, page)
+                db.insertSearchResults(results)
+                db.insertPageProgress(PageProgress(equipmentType, page.toLong()))
+            }}
+            return listResults
+        }
+    }
 
     /**
      * Retrieves equipment by category. NOTE: DB returns results in ascending id order. API returns
@@ -54,21 +111,6 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    //Implement https://github.com/kuuuurt/multiplatform-paging
-    /**
-     * Retrieves how many pages the app has pulled down from the backend so far.  Page number is
-     * persisted by equipment type and doesn't need to be managed by the client.
-     */
-//    private fun getEquipment(equipmentType: EquipmentType): CommonFlow<List<SearchResult>> = flow {
-//        val cachedProgress = cachedPageProgress.getProgress(equipmentType)
-//        if (cachedProgress == null) {
-//            val dbProgress = db.getPageProgressFor(equipmentType).toInt()
-//            cachedPageProgress.setProgress(equipmentType,dbProgress)
-//            return dbProgress
-//        } else {
-//            return cachedProgress
-//        }
-//    }
 
     /**
      * Necessary because SQL DB adds space characters in the category strings, preventing simple
