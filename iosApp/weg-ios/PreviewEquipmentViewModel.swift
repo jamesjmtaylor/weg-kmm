@@ -12,9 +12,9 @@ import shared
 /// Used to allow SwiftUI previews without requiring a ``weg_ios/wegApp/sdk`` to be injected.
 class PreviewEquipmentViewModel: NSObject, ObservableObject {
     @Published var equipment : [SearchResult] = []
-    
-    /// Tells if all records have been loaded. (Used to hide/show activity spinner)
     var hasNextPage = false
+    /// Tells if all records have been loaded. (Used to hide/show activity spinner)
+//     var hasNextPage = true
     
     func fetchEquipment(){}
     func fetchNextData(){}
@@ -22,17 +22,19 @@ class PreviewEquipmentViewModel: NSObject, ObservableObject {
 
 /// Extends ``weg_ios/EquipmentViewModel`` so that the ``wegApp`` can inject the ``weg_ios/wegApp/sdk`` for making network and database requests.
 class EquipmentViewModel: PreviewEquipmentViewModel {
-    private let sdk: EquipmentSDK
+    private let sdk: EquipmentRepository
     
-    init(sdk: EquipmentSDK) {
+    init(sdk: EquipmentRepository) {
         self.sdk = sdk
     }
     
     override func fetchEquipment() {
         sdk.pagingData.watch { nullablePagingData in
-            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else { return }
+            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+                return
+            }
             self.equipment = list
-            self.hasNextPage = self.sdk.hasNextPage
+            self.hasNextPage = self.sdk.pager.hasNextPage
         }
     }
     override func fetchNextData() {

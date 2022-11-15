@@ -14,6 +14,7 @@ import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.MainScope
 import kotlin.math.max
 import kotlin.math.min
 
@@ -26,43 +27,20 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private var cachedPageProgress = CachedPageProgress()
     private var totalHits = TotalResults()
 
-    var hasNextPage = true
-    //TODO: Implement pagers for other equipment types
-    val pager = Pager(
-        clientScope = clientScope,
-        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
-        initialKey = 0, // Key to use when initialized
-        getItems = { currentKey, _ ->
-            val items = getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
-            PagingResult(
-                items = items,
-                currentKey = currentKey,
-                prevKey = { max(currentKey - 1,0) },
-                nextKey = { currentKey + 1 }
-            )
-        }
-    )
-
-    val pagingData: CommonFlow<PagingData<SearchResult>>
-        get() = pager.pagingData
-            .cachedIn(clientScope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
-            .asCommonFlow() // So that iOS can consume the Flow
-
-
     @Throws(Exception::class)
     suspend fun getEquipmentNoCache(equipmentType: EquipmentType? = null, page: Int = 0, forceReload: Boolean? = false): List<SearchResult>? {
         if (forceReload == true) db.clearDatabase()
         val type = equipmentType?.apiName ?: return null
         val cachedPage = cachedPageProgress.getProgress(equipmentType) ?: 0
 
-        if (noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
+        if (totalHits.noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
             var filtered = trimCategoryNames(db.getAllResults()).filter { it.categories.contains(type) }
             val fromIndex = min(filtered.size, page * PAGE_SIZE)
             val toIndex = min(filtered.size, (page + 1) * PAGE_SIZE)
             return filtered.subList(fromIndex, toIndex)
         } else {
             val searchResults = api.getEquipmentSearchResults(type, page)
-            persistTotalHits(equipmentType, searchResults)
+            totalHits.persistTotalHits(equipmentType, searchResults)
             val listResults = searchResults.asList().also { results -> results?.let {
                 results.map { r -> r.images?.map { it.url = Api.BASE_URL + it.url } }
                 cachedPageProgress.setProgress(equipmentType, page)
@@ -90,7 +68,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         val type = equipmentType?.apiName ?: return null
         val cachedPage = cachedPageProgress.getProgress(equipmentType) ?: 0
 
-        if (noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
+        if (totalHits.noMoreApiResults(equipmentType, page) || (cachedPage != 0 && cachedPage >= page)) {
             if (cache.isEmpty()) cache = trimCategoryNames(db.getAllResults())
 
             val typeFilteredCache = cache.filter { it.categories.contains(type) }
@@ -99,7 +77,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
             return typeFilteredCache.subList(fromIndex, toIndex)
         } else {
             val searchResults = api.getEquipmentSearchResults(type, page)
-            persistTotalHits(equipmentType, searchResults)
+            totalHits.persistTotalHits(equipmentType, searchResults)
             val listResults = searchResults.asList().also { results -> results?.let {
                 results.map { it.images?.map { it.url = Api.BASE_URL + it.url } }
                 cache = cache.plus(results)
@@ -126,30 +104,32 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
         return trimmedResults
     }
+}
 
-    /**
-     * Saves the total number of hits for a given category to in-memory cache so that we know when
-     * to fetch new results from the API rather than return cached ones from the DB.
-     */
-    private fun persistTotalHits(
-        equipmentType: EquipmentType,
-        searchResults: SearchResults
-    ) {
-        when (equipmentType) {
-            EquipmentType.LAND -> totalHits.land = searchResults.query?.totalHits?.toInt()
-            EquipmentType.AIR -> totalHits.air = searchResults.query?.totalHits?.toInt()
-            EquipmentType.SEA -> totalHits.sea = searchResults.query?.totalHits?.toInt()
+class EquipmentRepository {
+    private val scope = MainScope()
+    var hasNextPage = true
+    //TODO: Implement pagers for other equipment types
+    val pager = Pager(
+        clientScope = scope,
+        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
+        initialKey = 0, // Key to use when initialized
+        getItems = { currentKey, _ ->
+            val items = Api().getEquipmentSearchResults(EquipmentType.LAND.apiName, currentKey).asList().also { results -> results?.let {
+                results.map { it.images?.map { i -> i.url = Api.BASE_URL + i.url }}}} ?: emptyList()//getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
+            PagingResult(
+                items = items,
+                currentKey = currentKey,
+                prevKey = { max(currentKey - 1,0) },
+                nextKey = { currentKey + 1 }
+            )
         }
-    }
+    )
 
-    private fun noMoreApiResults(equipmentType: EquipmentType, page: Int): Boolean {
-        val totalHits = when (equipmentType) {
-            EquipmentType.LAND -> totalHits.land
-            EquipmentType.AIR -> totalHits.air
-            EquipmentType.SEA -> totalHits.sea
-        } ?: return false //we haven't received any hits yet, continue pagination.
-        return page * PAGE_SIZE > totalHits
-    }
+    val pagingData: CommonFlow<PagingData<SearchResult>>
+        get() = pager.pagingData
+            .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
+            .asCommonFlow() // So that iOS can consume the Flow
 }
 
 /**
@@ -158,7 +138,33 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
  * based on how far the user has scrolled on a particular tab.
  */
 enum class EquipmentType(val apiName: String) { LAND("Land"), AIR("Air"), SEA("Sea") }
-data class TotalResults(var land: Int? = null, var air: Int? = null, var sea: Int? = null)
+
+data class TotalResults(var land: Int? = null, var air: Int? = null, var sea: Int? = null) {
+    /**
+     * Saves the total number of hits for a given category to in-memory cache so that we know when
+     * to fetch new results from the API rather than return cached ones from the DB.
+     */
+    fun persistTotalHits(
+        equipmentType: EquipmentType,
+        searchResults: SearchResults
+    ) {
+        when (equipmentType) {
+            EquipmentType.LAND -> land = searchResults.query?.totalHits?.toInt()
+            EquipmentType.AIR -> air = searchResults.query?.totalHits?.toInt()
+            EquipmentType.SEA -> sea = searchResults.query?.totalHits?.toInt()
+        }
+    }
+
+    fun noMoreApiResults(equipmentType: EquipmentType, page: Int): Boolean {
+        val totalHits = when (equipmentType) {
+            EquipmentType.LAND -> land
+            EquipmentType.AIR -> air
+            EquipmentType.SEA -> sea
+        } ?: return false //we haven't received any hits yet, continue pagination.
+        return page * PAGE_SIZE > totalHits
+    }
+}
+
 data class CachedPageProgress(var land: Int? = null, var air: Int? = null, var sea: Int? = null) {
     fun getProgress(equipmentType: EquipmentType): Int? {
         return when (equipmentType) {
