@@ -21,7 +21,30 @@ import kotlin.math.min
 class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val db = Database(databaseDriverFactory)
     private val api = Api()
-    private val clientScope = CoroutineScope(Dispatchers.Default)
+    private val scope = MainScope()
+
+    var hasNextPage = false
+    //TODO: Implement pagers for other equipment types
+    val pager = Pager(
+        clientScope = scope,
+        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
+        initialKey = 0, // Key to use when initialized
+        getItems = { currentKey, _ ->
+            val items = Api().getEquipmentSearchResults(EquipmentType.LAND.apiName, currentKey).asList().also { results -> results?.let {
+                results.map { it.images?.map { i -> i.url = Api.BASE_URL + i.url }}}} ?: emptyList()//getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
+            PagingResult(
+                items = items,
+                currentKey = currentKey,
+                prevKey = { max(currentKey - 1,0) },
+                nextKey = { currentKey + 1 }
+            )
+        }
+    )
+
+    val pagingData: CommonFlow<PagingData<SearchResult>>
+        get() = pager.pagingData
+            .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
+            .asCommonFlow() // So that iOS can consume the Flow
 
     private var cache = emptyList<SearchResult>()
     private var cachedPageProgress = CachedPageProgress()
@@ -104,32 +127,6 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
         return trimmedResults
     }
-}
-
-class EquipmentRepository {
-    private val scope = MainScope()
-    var hasNextPage = true
-    //TODO: Implement pagers for other equipment types
-    val pager = Pager(
-        clientScope = scope,
-        config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
-        initialKey = 0, // Key to use when initialized
-        getItems = { currentKey, _ ->
-            val items = Api().getEquipmentSearchResults(EquipmentType.LAND.apiName, currentKey).asList().also { results -> results?.let {
-                results.map { it.images?.map { i -> i.url = Api.BASE_URL + i.url }}}} ?: emptyList()//getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
-            PagingResult(
-                items = items,
-                currentKey = currentKey,
-                prevKey = { max(currentKey - 1,0) },
-                nextKey = { currentKey + 1 }
-            )
-        }
-    )
-
-    val pagingData: CommonFlow<PagingData<SearchResult>>
-        get() = pager.pagingData
-            .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
-            .asCommonFlow() // So that iOS can consume the Flow
 }
 
 /**

@@ -22,9 +22,9 @@ class PreviewEquipmentViewModel: NSObject, ObservableObject {
 
 /// Extends ``weg_ios/EquipmentViewModel`` so that the ``wegApp`` can inject the ``weg_ios/wegApp/sdk`` for making network and database requests.
 class EquipmentViewModel: PreviewEquipmentViewModel {
-    private let sdk: EquipmentRepository
+    private let sdk: EquipmentSDK
     
-    init(sdk: EquipmentRepository) {
+    init(sdk: EquipmentSDK) {
         self.sdk = sdk
     }
     

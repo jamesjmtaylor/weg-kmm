@@ -3,9 +3,8 @@ import shared
 
 @main
 struct WegApp: App {
-    //TODO: Need to figure out how to use EquipmentSDK instead of EquipmentRepository
     //TODO: "InvalidMutabilityException: mutation attempt of frozen com.jamesjmtaylor.weg.EquipmentSDK"
-    let sdk = EquipmentRepository()//EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory())
+    let sdk = EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory())
 	var body: some Scene {
         WindowGroup<EquipmentView> {
             EquipmentView(vm: EquipmentViewModel(sdk: sdk))
