@@ -22,9 +22,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
+import androidx.paging.*
 import com.jamesjmtaylor.weg.EquipmentSDK
 import com.jamesjmtaylor.weg.EquipmentType
 import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
@@ -90,16 +88,14 @@ fun EquipmentColumn(equipment: Flow<PagingData<SearchResult>>, padding: PaddingV
 @Composable
 fun PreviewEquipmentScreen() {
     WorldwideEquipmentGuideTheme {
-        val sdk = EquipmentSDK(DatabaseDriverFactory(LocalContext.current))
-        val land = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) {
-            SearchResultSource(EquipmentType.LAND, sdk)
-        }.flow
-        val air = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) {
-            SearchResultSource(EquipmentType.LAND, sdk)
-        }.flow
-        val sea = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) {
-            SearchResultSource(EquipmentType.LAND, sdk)
-        }.flow
+        val pagingSource = object : PagingSource<Int, SearchResult>() {
+            override fun getRefreshKey(state: PagingState<Int, SearchResult>): Int? = 0
+            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> =
+                LoadResult.Page( emptyList(), 0, 1)
+        }
+        val land = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow
+        val air = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow
+        val sea = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow
         val equipmentFlow = EquipmentViewModel.EquipmentFlow(land, air, sea)
         EquipmentScreen(equipmentFlow)
     }

@@ -23,15 +23,39 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val api = Api()
     private val scope = MainScope()
 
-    var hasNextPage = false
+    private suspend fun getEquipmentSearchResults(type: EquipmentType, key: Int): List<SearchResult>? {
+        if (cachedPageProgress.getProgress(type) == null) {
+            cachedPageProgress.setProgress(type, db.getPageProgressFor(type).toInt())
+        }
+        val cachedPage: Int = cachedPageProgress.getProgress(type) ?: 0
+        if (totalHits.noMoreApiResults(type, key) || (cachedPage != 0 && cachedPage >= key)) {
+            val filtered = trimCategoryNames(db.getAllResults()).filter { it.categories.contains(type.apiName) }
+            val fromIndex = min(filtered.size, key * PAGE_SIZE)
+            val toIndex = min(filtered.size, (key + 1) * PAGE_SIZE)
+            return filtered.subList(fromIndex, toIndex)
+        } else {
+            //TODO: Commented out `totalHits.persistTotalHits` and `cachedPageProgress.setProgress` break iOS, but they're needed for pagination.
+            //Either save equipment page to DB or figure a way around above limitation.
+            val searchResults = api.getEquipmentSearchResults(type.apiName, key)
+//            totalHits.persistTotalHits(type, searchResults)
+            val searchResultList = searchResults.asList()?.toMutableList()
+            searchResultList?.map { r -> r.images?.map { it.url = Api.BASE_URL + it.url}}
+//            cachedPageProgress.setProgress(type, key)
+            db.insertSearchResults(searchResultList ?: emptyList())
+            db.insertPageProgress(PageProgress(type, (key).toLong()))
+            return searchResultList?.toList()
+        }
+    }
+
+
     //TODO: Implement pagers for other equipment types
-    val pager = Pager(
+    //TODO: Check if Suppression still needed once used by Android project.
+    @Suppress("MemberVisibilityCanBePrivate") val pager = Pager(
         clientScope = scope,
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
-        initialKey = 0, // Key to use when initialized
+        initialKey = 0,
         getItems = { currentKey, _ ->
-            val items = Api().getEquipmentSearchResults(EquipmentType.LAND.apiName, currentKey).asList().also { results -> results?.let {
-                results.map { it.images?.map { i -> i.url = Api.BASE_URL + i.url }}}} ?: emptyList()//getEquipmentNoCache(EquipmentType.LAND, currentKey) ?: emptyList()
+            val items = getEquipmentSearchResults(EquipmentType.LAND, currentKey) ?: emptyList()
             PagingResult(
                 items = items,
                 currentKey = currentKey,
@@ -41,7 +65,8 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
     )
 
-    val pagingData: CommonFlow<PagingData<SearchResult>>
+    //TODO: Check if Suppression still needed once used by Android project.
+    @Suppress("unused") val pagingData: CommonFlow<PagingData<SearchResult>>
         get() = pager.pagingData
             .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
             .asCommonFlow() // So that iOS can consume the Flow

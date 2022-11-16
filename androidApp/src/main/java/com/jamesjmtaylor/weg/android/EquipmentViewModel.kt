@@ -24,15 +24,9 @@ import kotlinx.coroutines.flow.Flow
 class EquipmentViewModel(app: Application): AndroidViewModel(app) {
     private val sdk = EquipmentSDK(DatabaseDriverFactory(app))
 
-    private val _landFlow: Flow<PagingData<SearchResult>> = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        SearchResultSource(EquipmentType.LAND, sdk)
-    }.flow.cachedIn(viewModelScope)
-    private val _airFlow: Flow<PagingData<SearchResult>> = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        SearchResultSource(EquipmentType.AIR, sdk)
-    }.flow.cachedIn(viewModelScope)
-    private val _seaFlow: Flow<PagingData<SearchResult>> = Pager(PagingConfig(pageSize = PAGE_SIZE)) {
-        SearchResultSource(EquipmentType.SEA, sdk)
-    }.flow.cachedIn(viewModelScope)
+    private val _landFlow = sdk.pagingData
+    private val _airFlow = sdk.pagingData
+    private val _seaFlow = sdk.pagingData
     var equipmentFlow = EquipmentFlow(_landFlow, _airFlow, _seaFlow)
 
     data class EquipmentFlow(
