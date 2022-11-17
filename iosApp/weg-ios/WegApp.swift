@@ -17,11 +17,11 @@ struct WegApp: App {
     }
     
     static let placeholderEquipment = [
-        SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil),
-        SearchResult(title: "Ship", id: 2, categories: ["Sea"], images: [Image(name: "Ship", url: "")], details: nil),
-        SearchResult(title: "Plane", id: 3, categories: ["Air"], images: [Image(name: "Plane", url: "")], details: nil),
-        SearchResult(title: "Truck", id: 4, categories: ["Land"], images: [Image(name: "Truck", url: "")], details: nil),
-        SearchResult(title: "Gun", id: 5, categories: ["Land"], images: [Image(name: "Gun", url: "")], details: nil)
+        SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil, page: 0),
+        SearchResult(title: "Ship", id: 2, categories: ["Sea"], images: [Image(name: "Ship", url: "")], details: nil, page: 0),
+        SearchResult(title: "Plane", id: 3, categories: ["Air"], images: [Image(name: "Plane", url: "")], details: nil, page: 0),
+        SearchResult(title: "Truck", id: 4, categories: ["Land"], images: [Image(name: "Truck", url: "")], details: nil, page: 0),
+        SearchResult(title: "Gun", id: 5, categories: ["Land"], images: [Image(name: "Gun", url: "")], details: nil, page: 0)
     ]
 }
 

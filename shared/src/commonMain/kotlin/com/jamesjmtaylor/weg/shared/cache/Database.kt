@@ -23,7 +23,6 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
         dbQuery.transaction {
             dbQuery.removeAllResults()
             dbQuery.removeAllImages()
-            dbQuery.removeAllPageProgress()
         }
     }
 
@@ -34,8 +33,12 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
      * different image. This function groups duplicate [SearchResult.id]s so that it can flatten
      * the rows into a single [SearchResult.images] list row.
      */
-    internal fun getAllResults(): List<SearchResult> {
-        val ungroupedResults = dbQuery.selectAllSearchResults(::mapSearchResultSelecting).executeAsList()
+    internal fun fetchResults(page: Int? = null): List<SearchResult> {
+        val ungroupedResults = if (page != null) {
+            dbQuery.selectResultByPage(page.toLong(), ::mapSearchResultSelecting).executeAsList()
+        } else {
+            dbQuery.selectAllSearchResults(::mapSearchResultSelecting).executeAsList()
+        }
         val groupedMap = ungroupedResults.groupBy { it.id }
         val groupedList = mutableListOf<SearchResult>()
         for (group in groupedMap) {
@@ -46,13 +49,13 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
         return groupedList
     }
 
-    internal fun insertSearchResults(results: List<SearchResult>) {
+    internal fun insertSearchResults(results: List<SearchResult>, page: Int) {
         dbQuery.transaction {
             results.forEach { result ->
                 //Checks if the result already has at least one image, and if not, inserts the fetched images
                 val image = dbQuery.selectImagesByEquipmentId(result.id).executeAsList()
                 if (image.isEmpty()) insertImages(result)
-                insertResult(result)
+                insertResult(result, page)
             }
         }
     }
@@ -67,11 +70,12 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
         }
     }
 
-    private fun insertResult(result: SearchResult) {
+    private fun insertResult(result: SearchResult, page: Int) {
         dbQuery.insertResult(
             title = result.title,
             equipment_id = result.id,
-            categories = result.categories.joinToString { it }
+            categories = result.categories.joinToString { it },
+            page = page.toLong()
         )
     }
 
@@ -84,6 +88,7 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
         equipmentId: Long,
         title: String?,
         categories: String?,
+        page: Long?,
         imageEquipmentId: Long?,
         imageName: String?,
         imageUrl: String?
@@ -92,30 +97,8 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
             title = title,
             id = equipmentId,
             categories = categories?.split(",") ?: emptyList(),
-            images = listOf(Image(imageName,imageUrl))
-        )
-    }
-
-    fun getPageProgressFor(equipmentType: EquipmentType): Long {
-        return dbQuery.selectPageProgressByEquipmentType(equipmentType.name, ::mapPageProgressSelecting)
-            .executeAsOneOrNull()?.page ?: 0
-    }
-
-    private fun mapPageProgressSelecting(
-        equipmentType: String,
-        pageProgress: Long
-    ) : PageProgress {
-        return PageProgress(
-            equipmentType = EquipmentType.valueOf(equipmentType),
-            page = pageProgress
-        )
-    }
-
-    fun insertPageProgress(pageProgress: PageProgress) {
-        dbQuery.insertPageProgress(
-            equipment_type = pageProgress.equipmentType.name,
-            page = pageProgress.page
-
+            images = listOf(Image(imageName,imageUrl)),
+            page = page
         )
     }
 }

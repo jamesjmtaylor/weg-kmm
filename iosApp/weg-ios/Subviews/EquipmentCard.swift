@@ -28,7 +28,7 @@ struct EquipmentCard: View {
 
 struct EquipmentCard_Previews: PreviewProvider {
     static var previews: some View {
-        let placeholder = SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil)
+        let placeholder = SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil, page: 0)
         EquipmentCard(equipment: placeholder)
     }
 }

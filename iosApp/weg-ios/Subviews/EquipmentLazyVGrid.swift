@@ -15,6 +15,7 @@ import shared
 struct EquipmentLazyVGrid: View {
     @Environment(\.horizontalSizeClass) var horizontalSizeClass
     @ObservedObject private(set) var vm: PreviewEquipmentViewModel
+    @ObservedObject private(set) var vm: PreviewEquipmentViewModel
     @State private var searchText = ""
     
     let columns = [GridItem(.flexible()), GridItem(.flexible())]
