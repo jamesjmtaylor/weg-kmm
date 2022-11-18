@@ -21,26 +21,53 @@ class PreviewEquipmentViewModel: NSObject, ObservableObject {
 
 /// Extends ``weg_ios/EquipmentViewModel`` so that the ``wegApp`` can inject the ``weg_ios/wegApp/sdk`` for making network and database requests.
 class EquipmentViewModel: PreviewEquipmentViewModel {
-    private let sdk: EquipmentSDK
-    
+    internal let sdk: EquipmentSDK
     init(sdk: EquipmentSDK) {
         self.sdk = sdk
     }
-    
+}
+
+class LandEquipmentViewModel: EquipmentViewModel {
     override func fetchEquipment() {
-        sdk.pagingData.watch { nullablePagingData in
+        sdk.landPagingData.watch { nullablePagingData in
             guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
                 return
             }
             self.equipment = list
-            self.hasNextPage = self.sdk.pager.hasNextPage
+            self.hasNextPage = self.sdk.landPager.hasNextPage
         }
     }
     override func fetchNextData() {
-        sdk.pager.loadNext()
+        sdk.landPager.loadNext()
     }
 }
 
-struct LandPager {
-    
+class AirEquipmentViewModel: EquipmentViewModel {
+    override func fetchEquipment() {
+        sdk.airPagingData.watch { nullablePagingData in
+            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+                return
+            }
+            self.equipment = list
+            self.hasNextPage = self.sdk.airPager.hasNextPage
+        }
+    }
+    override func fetchNextData() {
+        sdk.airPager.loadNext()
+    }
+}
+
+class SeaEquipmentViewModel: EquipmentViewModel {
+    override func fetchEquipment() {
+        sdk.seaPagingData.watch { nullablePagingData in
+            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+                return
+            }
+            self.equipment = list
+            self.hasNextPage = self.sdk.seaPager.hasNextPage
+        }
+    }
+    override func fetchNextData() {
+        sdk.seaPager.loadNext()
+    }
 }

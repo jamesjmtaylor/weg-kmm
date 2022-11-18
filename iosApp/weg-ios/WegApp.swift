@@ -5,11 +5,15 @@ import shared
 struct WegApp: App {
     //TODO: "InvalidMutabilityException: mutation attempt of frozen com.jamesjmtaylor.weg.EquipmentSDK"
     let sdk = EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory())
-	var body: some Scene {
+    var body: some Scene {
         WindowGroup<EquipmentView> {
-            EquipmentView(vm: EquipmentViewModel(sdk: sdk))
-		}
-	}
+            EquipmentView(
+                landVm: LandEquipmentViewModel(sdk: sdk),
+                airVm: AirEquipmentViewModel(sdk: sdk),
+                seaVm: SeaEquipmentViewModel(sdk: sdk)
+            )
+        }
+    }
     
     init() {
         URLCache.shared.memoryCapacity = 10_000_000 // ~10 MB memory space
@@ -24,5 +28,6 @@ struct WegApp: App {
         SearchResult(title: "Gun", id: 5, categories: ["Land"], images: [Image(name: "Gun", url: "")], details: nil, page: 0)
     ]
 }
+
 
 

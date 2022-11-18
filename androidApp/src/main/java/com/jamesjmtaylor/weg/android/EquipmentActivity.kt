@@ -37,7 +37,7 @@ import kotlinx.coroutines.flow.Flow
 class EquipmentActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val equipmentViewModel = ViewModelProvider(this).get(EquipmentViewModel::class.java)
+        val equipmentViewModel = ViewModelProvider(this)[EquipmentViewModel::class.java]
         setContent { EquipmentScreen(equipmentViewModel.equipmentFlow) }
     }
 }
