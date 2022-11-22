@@ -41,7 +41,6 @@ fun EquipmentCard(
             modifier = Modifier
                 .align(Alignment.BottomCenter)
                 .background(MaterialTheme.colors.background)
-
         )
     }
 }

@@ -13,7 +13,24 @@ import com.kuuurt.paging.multiplatform.helpers.cachedIn
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.MainScope
 import kotlin.math.max
+import kotlin.native.concurrent.ThreadLocal
 
+/**
+ * Provides a repository pattern for iOS & Android presentation logic to draw models from.
+ *
+ * NOTE: Clients must either maintain a singleton reference themselves, or construct a new instance
+ * for each use. This is because with the old Native Garbage Collector, variables in singletons
+ * without @ThreadLocal can't be changed after initialization.
+ *
+ * The documentation for @ThreadLocal states "The object remains mutable and it is possible to
+ * change its state, but every thread will have a distinct copy of this object, so changes in one
+ * thread are not reflected in another."  Which completely defeats the purpose of the singleton
+ * pattern.
+ *
+ * @param databaseDriverFactory Used to construct a new instance of the DB used for long-term
+ * storage.
+ *
+ */
 @OptIn(FlowPreview::class) // Used for multiplatform pagination.
 @Suppress("MemberVisibilityCanBePrivate") //iOS uses landPager, airPager, and seaPager & needs them to be public.
 class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {

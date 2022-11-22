@@ -6,7 +6,6 @@ struct EquipmentView: View {
     @ObservedObject private(set) var airVm: PreviewEquipmentViewModel
     @ObservedObject private(set) var seaVm: PreviewEquipmentViewModel
 	var body: some View {
-        //TODO: Return different results based on tab selection
         TabView {
             EquipmentLazyVGrid(vm: landVm)
                 .tabItem{

@@ -3,7 +3,6 @@ import shared
 
 @main
 struct WegApp: App {
-    //TODO: "InvalidMutabilityException: mutation attempt of frozen com.jamesjmtaylor.weg.EquipmentSDK"
     let sdk = EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory())
     var body: some Scene {
         WindowGroup<EquipmentView> {

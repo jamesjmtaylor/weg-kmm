@@ -3,6 +3,7 @@ package com.jamesjmtaylor.weg.android
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.padding
@@ -11,11 +12,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.get
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -23,22 +24,19 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.*
-import com.jamesjmtaylor.weg.EquipmentSDK
-import com.jamesjmtaylor.weg.EquipmentType
 import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
-import com.jamesjmtaylor.weg.android.subviews.Screen
+import com.jamesjmtaylor.weg.android.subviews.BottomBarScreen
 import com.jamesjmtaylor.weg.android.subviews.SearchBar
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.SearchResult
 import com.jamesjmtaylor.weg.network.Api
-import com.jamesjmtaylor.weg.shared.cache.DatabaseDriverFactory
 import kotlinx.coroutines.flow.Flow
 
 class EquipmentActivity : ComponentActivity() {
+    private val vm : EquipmentViewModel by viewModels { EquipmentViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val equipmentViewModel = ViewModelProvider(this)[EquipmentViewModel::class.java]
-        setContent { EquipmentScreen(equipmentViewModel.equipmentFlow) }
+        setContent { EquipmentScreen(vm.equipmentFlow) }
     }
 }
 
@@ -46,13 +44,13 @@ class EquipmentActivity : ComponentActivity() {
 fun EquipmentScreen(equipment: EquipmentViewModel.EquipmentFlow) {
     WorldwideEquipmentGuideTheme {// A surface container using the 'background' color from the theme
         val navController = rememberNavController()
-        val screens = listOf(Screen.Land,Screen.Air, Screen.Sea)
+        val bottomBarScreens = listOf(BottomBarScreen.Land,BottomBarScreen.Air, BottomBarScreen.Sea)
         Scaffold(//ensures proper layout strategy between topBar, bottomBar, fab, bottomSheet, content, etc.
             //See: https://developer.android.com/jetpack/compose/navigation#bottom-nav
             bottomBar = { BottomNavigation(backgroundColor = MaterialTheme.colors.background) {
                 val navBackStackEntry by navController.currentBackStackEntryAsState()
                 val currentDestination = navBackStackEntry?.destination
-                screens.forEach { screen ->
+                bottomBarScreens.forEach { screen ->
                     BottomNavigationItem(
                         icon = { Icon(ImageVector.vectorResource(screen.drawableId), stringResource(screen.stringId)) },
                         label = { Text(stringResource(screen.stringId)) },
@@ -67,10 +65,10 @@ fun EquipmentScreen(equipment: EquipmentViewModel.EquipmentFlow) {
                 }
             }}
         ) { padding ->
-            NavHost(navController, startDestination = Screen.Land.route) {
-                composable(Screen.Land.route) { EquipmentColumn(equipment.land, padding) }
-                composable(Screen.Air.route) { EquipmentColumn(equipment.air, padding) }
-                composable(Screen.Sea.route) { EquipmentColumn(equipment.sea, padding) }
+            NavHost(navController, startDestination = BottomBarScreen.Land.route) {
+                composable(BottomBarScreen.Land.route) { EquipmentColumn(equipment.land, padding) }
+                composable(BottomBarScreen.Air.route) { EquipmentColumn(equipment.air, padding) }
+                composable(BottomBarScreen.Sea.route) { EquipmentColumn(equipment.sea, padding) }
             }
         }
     }
