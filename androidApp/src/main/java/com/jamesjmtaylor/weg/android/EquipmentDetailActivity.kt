@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -12,13 +13,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 
 class EquipmentDetailActivity : ComponentActivity()  {
+    private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        //TODO: Replace this with EquipmentActivity model instantiation pattern.
-        val equipmentDetailViewModel = ViewModelProvider(this)[EquipmentDetailViewModel::class.java]
+        val id : Long = intent.extras?.getLong(EQUIPMENT_ID_KEY) ?: return
+        vm.getEquipmentDetails(id)
         setContent { EquipmentDetailScreen() }
     }
 }
+
+const val EQUIPMENT_ID_KEY = "EQUIPMENT_ID_KEY"
 
 @Composable
 fun EquipmentDetailScreen(modifier: Modifier = Modifier) {

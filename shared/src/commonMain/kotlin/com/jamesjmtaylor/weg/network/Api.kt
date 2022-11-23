@@ -32,8 +32,7 @@ class Api {
         return httpClient.get(searchURl)
     }
 
-    //TODO: Persist the result to the database using the various tables in the [Database] class.
-    suspend fun getEquipmentById(equipmentId: Int): SearchResult {
+    suspend fun getEquipmentById(equipmentId: Long): SearchResult {
         val equipmentUrl = API_URL + "?format=json&" +
             "action=parseG2&" + //parseG2, returning equipment details
             "formatversion=2&" + //version 2 is the latest API json result format

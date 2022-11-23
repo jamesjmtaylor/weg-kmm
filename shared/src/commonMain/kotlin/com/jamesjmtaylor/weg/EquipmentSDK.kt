@@ -38,6 +38,13 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val api = Api()
     private val scope = MainScope()
 
+    suspend fun getEquipmentDetails(id: Long): SearchResult {
+        //TODO: Persist the result to the database using the various tables in the [Database] class.
+        //TODO: Implement db retrieval
+        // db.fetchDetails(id)
+        return api.getEquipmentById(id)
+    }
+
     /**
      * Retrieves equipment by category and page. NOTE: DB returns results in ascending id order. API returns
      * results using a consistent, but unknown, ordering system (id=2365 is always the first result).

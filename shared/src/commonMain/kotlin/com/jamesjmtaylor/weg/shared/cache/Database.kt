@@ -23,7 +23,13 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
         dbQuery.transaction {
             dbQuery.removeAllResults()
             dbQuery.removeAllImages()
+            dbQuery.removeAllEquipmentDetails()
+            dbQuery.removeAllSearchResultProperties()
         }
+    }
+    //TODO: Implement actual query & joins
+    internal fun fetchDetails(id: Long): SearchResult {
+        return SearchResult(id = id)
     }
 
     /**

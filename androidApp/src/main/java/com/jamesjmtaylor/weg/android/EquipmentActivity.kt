@@ -15,8 +15,6 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.vectorResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.get
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.NavHost
@@ -24,8 +22,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.paging.*
-import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
 import com.jamesjmtaylor.weg.android.subviews.BottomBarScreen
+import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
 import com.jamesjmtaylor.weg.android.subviews.SearchBar
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.SearchResult

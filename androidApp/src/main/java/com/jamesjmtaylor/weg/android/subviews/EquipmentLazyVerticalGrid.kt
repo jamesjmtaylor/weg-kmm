@@ -2,6 +2,7 @@ package com.jamesjmtaylor.weg.android.subviews
 
 import android.app.Application
 import android.content.Intent
+import android.os.Bundle
 import androidx.annotation.StringRes
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.paging.PagingData
 import androidx.paging.compose.LazyPagingItems
 import androidx.paging.compose.collectAsLazyPagingItems
+import com.jamesjmtaylor.weg.android.EQUIPMENT_ID_KEY
 import com.jamesjmtaylor.weg.android.EquipmentDetailActivity
 import com.jamesjmtaylor.weg.android.EquipmentViewModel
 import com.jamesjmtaylor.weg.android.R
@@ -47,7 +49,10 @@ fun EquipmentLazyVerticalGrid(
                 imgUrl = searchResultListItems[index]?.images?.firstOrNull()?.url,
                 text = text,
                 modifier = Modifier.height(150.dp).clickable {
-                    context.startActivity(Intent(context, EquipmentDetailActivity::class.java))
+                    val intent = Intent(context, EquipmentDetailActivity::class.java)
+                    val id = searchResultListItems[index]?.id ?: 0
+                    intent.putExtra(EQUIPMENT_ID_KEY, id)
+                    context.startActivity(intent)
                 }
             )
         }

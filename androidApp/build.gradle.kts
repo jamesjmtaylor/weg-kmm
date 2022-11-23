@@ -60,8 +60,8 @@ dependencies {
     implementation(libs.androidx.compose.paging)
     //NOTE: Using the settings.gradle.ks file for these dependencies causes a 404.  This is probably
     //because unlike the other dependencies they have a "-" in the group (text before the first ":")
-    implementation("io.coil-kt:coil:2.2.0")
-    implementation("io.coil-kt:coil-compose:2.2.0")
+    implementation("io.coil-kt:coil:2.2.2")
+    implementation("io.coil-kt:coil-compose:2.2.2")
 
     androidTestImplementation(libs.androidx.ui.test)
     debugImplementation(libs.androidx.ui.tooling)

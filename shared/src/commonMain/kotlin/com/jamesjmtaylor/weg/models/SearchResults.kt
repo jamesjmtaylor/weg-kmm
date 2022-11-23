@@ -55,15 +55,15 @@ data class SearchResult (
 
 @Serializable
 data class SearchResultDetails (
-    val tiers: List<Boolean>,
+    val tiers: List<Boolean> = emptyList(),
     val notes: String,
     val dateOfIntroduction: Long,
     val countryOfOrigin: String,
     val proliferation: String,
-    val selectedregions: List<String>,
-    val checkedcountries: List<String>,
-    val sections: List<Section>,
-    val variants: List<Variant>,
+    val selectedRegions: List<String> = emptyList(),
+    val checkedCountries: List<String> = emptyList(),
+    val sections: List<Section> = emptyList(),
+    val variants: List<Variant> = emptyList(),
     val type: String,
     val version: Long
 )
@@ -71,7 +71,7 @@ data class SearchResultDetails (
 @Serializable
 data class Section (
     val name: String,
-    val properties: List<Property>
+    val properties: List<Property> = emptyList(),
 )
 
 @Serializable
