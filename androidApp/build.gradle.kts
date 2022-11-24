@@ -56,8 +56,13 @@ dependencies {
     implementation(libs.androidx.navigation.common)
     implementation(libs.androidx.navigation.common.ktx)
     implementation(libs.androidx.navigation.compose)
+    //Used for paginating infinite scroll
     implementation(libs.androidx.paging)
     implementation(libs.androidx.compose.paging)
+    //Used for paging through images
+    implementation(libs.accompanist.pager)
+    implementation(libs.accompanist.pager.indicators)
+    implementation(libs.androidx.compose.constraintlayout)
     //NOTE: Using the settings.gradle.ks file for these dependencies causes a 404.  This is probably
     //because unlike the other dependencies they have a "-" in the group (text before the first ":")
     implementation("io.coil-kt:coil:2.2.2")

@@ -20,6 +20,7 @@ dependencyResolutionManagement {
             version("compose", "1.3.1")
             version("navigation", "2.5.1")
             version("paging", "3.1.1")
+            version("pager", "0.27.1")
 
             library("coroutines","org.jetbrains.kotlinx","kotlinx-coroutines-core").versionRef("coroutines")
             library("kotlin-stdlib", "org.jetbrains.kotlin", "kotlin-stdlib").versionRef("kotlin")
@@ -63,6 +64,9 @@ dependencyResolutionManagement {
             library("androidx-ui-test","androidx.compose.ui","ui-test-junit4").versionRef("compose")
             library("androidx-paging", "androidx.paging","paging-runtime").versionRef("paging")
             library("androidx-compose-paging", "androidx.paging", "paging-compose").version("1.0.0-alpha16")
+            library("androidx-compose-constraintlayout", "androidx.constraintlayout", "constraintlayout-compose").version("1.0.1")
+            library("accompanist-pager", "com.google.accompanist", "accompanist-pager").versionRef("pager")
+            library("accompanist-pager-indicators", "com.google.accompanist", "accompanist-pager-indicators").versionRef("pager")
         }
     }
 }
