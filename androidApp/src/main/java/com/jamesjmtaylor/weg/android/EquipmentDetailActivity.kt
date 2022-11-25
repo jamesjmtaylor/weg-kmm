@@ -44,7 +44,7 @@ fun EquipmentDetailScreen(lceLiveData: LiveData<LCE>, modifier: Modifier = Modif
     lceState.value?.content?.let { equipment ->
         ConstraintLayout {
             val (img, text) = createRefs()
-
+            //TODO: Implement Image Pager per https://google.github.io/accompanist/pager/#usage
             AsyncImage(
                 model = equipment.images?.first(),
                 contentDescription = equipment.title ?: stringResource(R.string.placeholder_name),
@@ -52,6 +52,7 @@ fun EquipmentDetailScreen(lceLiveData: LiveData<LCE>, modifier: Modifier = Modif
                 contentScale = ContentScale.FillBounds,
                 modifier = Modifier.fillMaxSize()
             )
+            //TODO: Implement Details Views.
             Text(text = equipment.title ?: stringResource(R.string.placeholder_name))
         }
     }
