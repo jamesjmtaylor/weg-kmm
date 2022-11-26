@@ -59,6 +59,7 @@ dependencyResolutionManagement {
             library("androidx-ui-runtime", "androidx.compose.runtime", "runtime-livedata").versionRef("compose")
 
             library("androidx-lifecycle","androidx.lifecycle","lifecycle-runtime-ktx").version("2.4.1")
+            library("androidx-lifecycle-runtime-compose","androidx.lifecycle", "lifecycle-runtime-compose").version("2.6.0-alpha03")
             library("androidx-activity","androidx.activity","activity-compose").version("1.4.0")
 
             library("androidx-ui-test","androidx.compose.ui","ui-test-junit4").versionRef("compose")

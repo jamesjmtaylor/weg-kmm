@@ -8,16 +8,17 @@ import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
+import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
@@ -28,20 +29,21 @@ class EquipmentDetailActivity : ComponentActivity()  {
         super.onCreate(savedInstanceState)
         val id : Long = intent.extras?.getLong(EQUIPMENT_ID_KEY) ?: return
         vm.getEquipmentDetails(id)
-        setContent { EquipmentDetailScreen(vm.lceLiveData) }
+        setContent { EquipmentDetailScreen(vm) }
     }
 }
 
 const val EQUIPMENT_ID_KEY = "EQUIPMENT_ID_KEY"
-
+//TODO: Finish https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4 for expandable list.
+@OptIn(ExperimentalLifecycleComposeApi::class)
 @Composable
-fun EquipmentDetailScreen(lceLiveData: LiveData<LCE>, modifier: Modifier = Modifier) {
-    val lceState = lceLiveData.observeAsState()
-    if (lceState.value?.loading == true) Spinner()
-    lceState.value?.error?.let { error ->
-        Text("Error: $error")
-    }
-    lceState.value?.content?.let { equipment ->
+fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifier = Modifier) {
+    val lce by vm.lce.collectAsStateWithLifecycle()
+    val expandedCardIds by vm.expandedCardIdsList.collectAsStateWithLifecycle()
+    if (lce.loading) Spinner()
+    if (lce.error != null) Text("Error: ${lce.error}")
+
+    lce.content?.let { equipment ->
         ConstraintLayout {
             val (img, text) = createRefs()
             //TODO: Implement Image Pager per https://google.github.io/accompanist/pager/#usage
@@ -63,7 +65,7 @@ fun EquipmentDetailScreen(lceLiveData: LiveData<LCE>, modifier: Modifier = Modif
 @Composable
 fun PreviewEquipmentDetailScreen() {
     WorldwideEquipmentGuideTheme {
-        val lceLiveData = MutableLiveData(LCE(true))
+        val vm = EquipmentDetailViewModel()
         EquipmentDetailScreen(lceLiveData)
     }
 }

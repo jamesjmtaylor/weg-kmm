@@ -52,6 +52,7 @@ dependencies {
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.ui.runtime)
     implementation(libs.androidx.lifecycle)
+    implementation(libs.androidx.lifecycle.runtime.compose)
     implementation(libs.androidx.activity)
     implementation(libs.androidx.navigation.common)
     implementation(libs.androidx.navigation.common.ktx)
