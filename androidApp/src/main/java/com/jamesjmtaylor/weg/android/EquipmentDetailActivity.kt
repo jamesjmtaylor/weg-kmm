@@ -51,12 +51,11 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
             //TODO: Implement Image Pager per https://google.github.io/accompanist/pager/#usage
             Text(text = equipment.title ?: stringResource(R.string.placeholder_name))
             Spacer(Modifier.size(16.dp))
-
-            //TODO: Find out why image files to load
             AsyncImage(
-                model = equipment.images?.first(),
+                model = equipment.images?.first()?.url,
                 contentDescription = equipment.title ?: stringResource(R.string.placeholder_name),
-                placeholder = painterResource(id = R.drawable.placeholder)
+                placeholder = painterResource(id = R.drawable.placeholder),
+                modifier = Modifier.fillMaxWidth()
             )
             //TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
 
