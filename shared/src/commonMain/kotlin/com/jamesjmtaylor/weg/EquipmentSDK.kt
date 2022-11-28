@@ -42,7 +42,9 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         //TODO: Persist the result to the database using the various tables in the [Database] class.
         //TODO: Implement db retrieval
         // db.fetchDetails(id)
-        return api.getEquipmentById(id)
+        val searchResult = api.getEquipmentById(id)
+        searchResult.images?.map { it.url = Api.BASE_URL + it.url }
+        return searchResult
     }
 
     /**
