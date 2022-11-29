@@ -10,6 +10,7 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -21,6 +22,10 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
+import com.google.accompanist.pager.ExperimentalPagerApi
+import com.google.accompanist.pager.HorizontalPager
+import com.google.accompanist.pager.HorizontalPagerIndicator
+import com.google.accompanist.pager.rememberPagerState
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
@@ -38,7 +43,7 @@ class EquipmentDetailActivity : ComponentActivity()  {
 }
 
 const val EQUIPMENT_ID_KEY = "EQUIPMENT_ID_KEY"
-@OptIn(ExperimentalLifecycleComposeApi::class)
+@OptIn(ExperimentalLifecycleComposeApi::class, ExperimentalPagerApi::class)
 @Composable
 fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifier = Modifier) {
     val lce by vm.lce.collectAsStateWithLifecycle()
@@ -48,17 +53,28 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
 
     lce.content?.let { equipment ->
         Column {
-            //TODO: Implement Image Pager per https://google.github.io/accompanist/pager/#usage
-            Text(text = equipment.title ?: stringResource(R.string.placeholder_name))
-            Spacer(Modifier.size(16.dp))
-            AsyncImage(
-                model = equipment.images?.first()?.url,
-                contentDescription = equipment.title ?: stringResource(R.string.placeholder_name),
-                placeholder = painterResource(id = R.drawable.placeholder),
-                modifier = Modifier.fillMaxWidth()
+            val pagerState = rememberPagerState()
+            HorizontalPager(count = equipment.images?.size ?: 0, state = pagerState) { index ->
+                AsyncImage(
+                    model = equipment.images?.get(index)?.url,
+                    contentDescription = equipment.title ?: stringResource(R.string.placeholder_name),
+                    placeholder = painterResource(id = R.drawable.placeholder),
+                    contentScale = ContentScale.FillBounds,
+                    modifier = Modifier.fillMaxWidth().aspectRatio(1.5f)
+                )
+            }
+            HorizontalPagerIndicator(
+                pagerState = pagerState,
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .padding(8.dp),
             )
-            //TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
+            Text(
+                text = equipment.title ?: stringResource(R.string.placeholder_name),
+                modifier = Modifier.padding(8.dp)
+            )
 
+            //TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
         }
     }
 }

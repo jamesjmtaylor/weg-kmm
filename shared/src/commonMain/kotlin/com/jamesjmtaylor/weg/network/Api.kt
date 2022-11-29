@@ -17,7 +17,7 @@ class Api {
         }
     }
 
-    suspend fun getEquipmentSearchResults(category: String, page: Int, searchTerm: String? = null): SearchResults {
+    suspend fun getEquipmentSearchResults(category: String, page: Int, searchTerm: String? = null): List<SearchResult> {
         val srSearch = if (searchTerm != null)  //Filter search to category & searchTerm
             "srsearch=intitle:$searchTerm+incategory:$category&"
         else  //Filter search to just the provided category
@@ -29,7 +29,9 @@ class Api {
                 srSearch +
                 "srlimit=${PAGE_SIZE}" + //How many results to fetch
                 "&sroffset=${page * PAGE_SIZE}" //Where to start fetching results
-        return httpClient.get(searchURl)
+        val results = httpClient.get<SearchResults>(searchURl).asList()?.toMutableList()
+        results?.map { r -> r.images?.map { it.url = BASE_URL + it.url } }
+        return results ?: emptyList()
     }
 
     suspend fun getEquipmentById(equipmentId: Long): SearchResult {
@@ -37,12 +39,14 @@ class Api {
             "action=parseG2&" + //parseG2, returning equipment details
             "formatversion=2&" + //version 2 is the latest API json result format
             "pageid=$equipmentId" //the equipment to retrieve
-        return httpClient.get<ParseG2Response>(equipmentUrl).parseG2
+        val result = httpClient.get<ParseG2Response>(equipmentUrl).parseG2
+        result.images?.map { it.url = BASE_URL + it.url }
+        return result
     }
 
     companion object {
         const val BASE_URL = "https://odin.tradoc.army.mil"
         const val API_URL = "$BASE_URL/mediawiki/api.php"
-        const val PAGE_SIZE = 10
+        const val PAGE_SIZE = 100
     }
 }

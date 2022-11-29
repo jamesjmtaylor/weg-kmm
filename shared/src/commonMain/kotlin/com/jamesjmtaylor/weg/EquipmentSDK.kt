@@ -1,3 +1,5 @@
+@file:OptIn(ExperimentalCoroutinesApi::class)
+
 package com.jamesjmtaylor.weg
 
 import com.jamesjmtaylor.weg.models.SearchResult
@@ -10,10 +12,10 @@ import com.kuuurt.paging.multiplatform.PagingConfig
 import com.kuuurt.paging.multiplatform.PagingData
 import com.kuuurt.paging.multiplatform.PagingResult
 import com.kuuurt.paging.multiplatform.helpers.cachedIn
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.FlowPreview
 import kotlinx.coroutines.MainScope
 import kotlin.math.max
-import kotlin.native.concurrent.ThreadLocal
 
 /**
  * Provides a repository pattern for iOS & Android presentation logic to draw models from.
@@ -42,9 +44,8 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         //TODO: Persist the result to the database using the various tables in the [Database] class.
         //TODO: Implement db retrieval
         // db.fetchDetails(id)
-        val searchResult = api.getEquipmentById(id)
-        searchResult.images?.map { it.url = Api.BASE_URL + it.url }
-        return searchResult
+
+        return api.getEquipmentById(id)
     }
 
     /**
@@ -57,15 +58,13 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
      * @param page the page number to retrieve for infinite scrolling support. 0-based index.
      * @return a list of search results for the given page.
      */
-    private suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): List<SearchResult>? {
+    private suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): List<SearchResult> {
         val dbResults = trimCategoryNames(db.fetchResults(page))
             .filter { it.categories.contains(type.apiName) }.toList()
         return dbResults.ifEmpty {
             val apiResults = api.getEquipmentSearchResults(type.apiName, page)
-                .asList()?.toMutableList()
-            apiResults?.map { r -> r.images?.map { it.url = Api.BASE_URL + it.url } }
-            apiResults?.let { db.insertSearchResults(apiResults, page) }
-            apiResults?.toList()
+            apiResults.let { db.insertSearchResults(apiResults, page) }
+            apiResults.toList()
         }
     }
 
@@ -75,7 +74,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
         initialKey = 0,
         getItems = { currentKey, _ ->
-            val items = getEquipmentSearchResults(EquipmentType.LAND, currentKey) ?: emptyList()
+            val items = getEquipmentSearchResults(EquipmentType.LAND, currentKey)
             PagingResult(
                 items = items,
                 currentKey = currentKey,
@@ -94,7 +93,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
         initialKey = 0,
         getItems = { currentKey, _ ->
-            val items = getEquipmentSearchResults(EquipmentType.AIR, currentKey) ?: emptyList()
+            val items = getEquipmentSearchResults(EquipmentType.AIR, currentKey)
             PagingResult(
                 items = items,
                 currentKey = currentKey,
@@ -113,7 +112,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         config = PagingConfig(pageSize = PAGE_SIZE, enablePlaceholders = false), // Ignored on iOS
         initialKey = 0,
         getItems = { currentKey, _ ->
-            val items = getEquipmentSearchResults(EquipmentType.SEA, currentKey) ?: emptyList()
+            val items = getEquipmentSearchResults(EquipmentType.SEA, currentKey)
             PagingResult(
                 items = items,
                 currentKey = currentKey,

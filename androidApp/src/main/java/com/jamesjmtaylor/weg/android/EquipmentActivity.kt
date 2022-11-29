@@ -34,12 +34,12 @@ class EquipmentActivity : ComponentActivity() {
     private val vm : EquipmentViewModel by viewModels { EquipmentViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContent { EquipmentScreen(vm.equipmentFlow) }
+        setContent { BottomNavScreen(vm.equipmentFlow) }
     }
 }
 
 @Composable
-fun EquipmentScreen(equipment: EquipmentViewModel.EquipmentFlow) {
+fun BottomNavScreen(equipment: EquipmentViewModel.EquipmentFlow) {
     WorldwideEquipmentGuideTheme {// A surface container using the 'background' color from the theme
         val navController = rememberNavController()
         val bottomBarScreens = listOf(BottomBarScreen.Land,BottomBarScreen.Air, BottomBarScreen.Sea)
@@ -56,8 +56,8 @@ fun EquipmentScreen(equipment: EquipmentViewModel.EquipmentFlow) {
                         onClick = { navController.navigate(screen.route) {
                             // avoid building up a large stack of destinations on the back stack as users select items
                             popUpTo(navController.graph.findStartDestination().id) { saveState = true }
-                            launchSingleTop = true // Avoid multiple copies of the same destination when reselecting the same item
-                            restoreState = true // Restore state when reselecting a previously selected item
+                            launchSingleTop = true // Avoid multiple copies of the same destination when re-selecting the same item
+                            restoreState = true // Restore state when re-selecting a previously selected item
                         }}
                     )
                 }
@@ -93,6 +93,6 @@ fun PreviewEquipmentScreen() {
         val air = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow
         val sea = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow
         val equipmentFlow = EquipmentViewModel.EquipmentFlow(land, air, sea)
-        EquipmentScreen(equipmentFlow)
+        BottomNavScreen(equipmentFlow)
     }
 }
