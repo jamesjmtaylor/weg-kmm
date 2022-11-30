@@ -62,7 +62,7 @@ data class SearchResult (
 data class SearchResultDetails (
     val tiers: List<Boolean> = emptyList(),
     val notes: String? = null,
-    @Serializable(with = DateOfIntroduction.DateOfIntroductionLongSerializer::class)
+    @Serializable(with = DateOfIntroduction.DateOfIntroductionSerializer::class)
     val dateOfIntroduction: DateOfIntroduction? = null,
     val countryOfOrigin: String? = null,
     val proliferation: String? = null,
@@ -76,13 +76,13 @@ data class SearchResultDetails (
 
 /**
  * Handles mixed ODIN API type that can either be a long (i.e. 1984) or a string (i.e. "INA").
- * @property value the underlying value of the date of introduction.
+ * @property value the underlying value of the date of introduction as retrieved from the API.
  * @property description the value used to describe the date of introduction.  Either a full date
  * (in string format) or "INA" for "Is Not Available"
  */
 @Serializable
 data class DateOfIntroduction(private val value: Long? = null, val description: String){
-    object DateOfIntroductionLongSerializer : KSerializer<DateOfIntroduction> {
+    object DateOfIntroductionSerializer : KSerializer<DateOfIntroduction> {
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("dateOfIntroduction", PrimitiveKind.LONG)
         override fun serialize(encoder: Encoder, value: DateOfIntroduction) = encoder.encodeLong(value.value ?: 0)
         override fun deserialize(decoder: Decoder): DateOfIntroduction {
