@@ -91,7 +91,7 @@ fun PreviewEquipmentDetailScreen() {
         val details = SearchResultDetails(
             tiers = listOf(false,false,false,true),
             notes = "This is a tank",
-            dateOfIntroduction = 1988,
+            dateOfIntroduction = DateOfIntroduction(1988, "1988"),
             countryOfOrigin = "USA",
             proliferation = "USA",
             selectedRegions = emptyList(),
