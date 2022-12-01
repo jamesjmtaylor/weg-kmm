@@ -3,4 +3,7 @@
     <color name="colorPrimary">#6200EE</color>
     <color name="colorPrimaryDark">#3700B3</color>
     <color name="colorAccent">#03DAC5</color>
+    <color name="cardExpandedBackgroundColor">#FF1100</color>
+    <color name="cardCollapsedBackgroundColor">#365FF4</color>
+    <color name="contentColor">#FFEB3B</color>
 </resources>

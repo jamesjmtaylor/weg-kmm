@@ -6,9 +6,9 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -17,8 +17,6 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -26,6 +24,7 @@ import com.google.accompanist.pager.ExperimentalPagerApi
 import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
+import com.jamesjmtaylor.weg.android.subviews.ExpandableCard
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
@@ -50,7 +49,7 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
     val expandedCardIds by vm.expandedCardIdsList.collectAsStateWithLifecycle()
     if (lce.loading) Spinner()
     if (lce.error != null) Text("Error: ${lce.error}")
-
+//TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
     lce.content?.let { equipment ->
         Column {
             val pagerState = rememberPagerState()
@@ -60,7 +59,9 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                     contentDescription = equipment.title ?: stringResource(R.string.placeholder_name),
                     placeholder = painterResource(id = R.drawable.placeholder),
                     contentScale = ContentScale.FillBounds,
-                    modifier = Modifier.fillMaxWidth().aspectRatio(1.5f)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .aspectRatio(1.5f)
                 )
             }
             HorizontalPagerIndicator(
@@ -73,8 +74,17 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                 text = equipment.title ?: stringResource(R.string.placeholder_name),
                 modifier = Modifier.padding(8.dp)
             )
-
-            //TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
+            equipment.details?.variants?.let { variants ->
+                LazyColumn {
+                    items(variants.size) { index ->
+                        ExpandableCard(
+                            variant = variants[index],
+                            onCardArrowClick = { vm.onCardArrowClicked(index) },
+                            expanded = expandedCardIds.contains(index),
+                        )
+                    }
+                }
+            }
         }
     }
 }
