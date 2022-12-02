@@ -1,9 +1,11 @@
 package com.jamesjmtaylor.weg.android.subviews
 
+import android.content.res.Configuration
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import com.jamesjmtaylor.weg.android.R
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Card
 import androidx.compose.material.Icon
@@ -18,7 +20,9 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.Variant
 
 //TODO: Build Previews
@@ -40,9 +44,7 @@ fun ExpandableCard(
         if (expand) colorResource(id = R.color.cardExpandedBackgroundColor)
         else colorResource(id = R.color.cardCollapsedBackgroundColor)
     }
-    val cardPaddingHorizontal by transition.animateDp({
-        tween(durationMillis = EXPAND_ANIMATION_DURATION)
-    }, label = "cardPaddingHorizontal") { expand -> if (expand) 48.dp else 24.dp }
+
     val cardElevation by transition.animateDp({
         tween(durationMillis = EXPAND_ANIMATION_DURATION)
     }, label = "cardElevation") { expand -> if (expand) 24.dp else 4.dp }
@@ -63,10 +65,7 @@ fun ExpandableCard(
         shape = RoundedCornerShape(cardRoundedCorners),
         modifier = Modifier
             .fillMaxWidth()
-            .padding(
-                horizontal = cardPaddingHorizontal,
-                vertical = 8.dp
-            )
+            .padding(8.dp)
     ) {
         Column {
             Box {
@@ -139,7 +138,6 @@ fun ExpandableContent(
         exit = exitTransition
     ) {
         Column(modifier = Modifier.padding(8.dp)) {
-            Spacer(modifier = Modifier.heightIn(100.dp))
             Text(
                 text = "Expandable content here",
                 textAlign = TextAlign.Center
@@ -149,4 +147,14 @@ fun ExpandableContent(
     }
 }
 const val EXPAND_ANIMATION_DURATION = 2000 //Transition time from arrow down to arrow up
-const val EXPANSION_TRANSITION_DURATION = 4000 //Transition time from box closed to box open
+const val EXPANSION_TRANSITION_DURATION = 2000 //Transition time from box closed to box open
+
+@Preview(showBackground = true, name = "Light Mode")
+@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
+@Composable
+fun PreviewExpandableCard() {
+    Column {
+        ExpandableCard(Variant("T72A", "Notes go here"), {}, false)
+        ExpandableCard(Variant("T72A", "Notes go here"), {}, true)
+    }
+}

@@ -5,13 +5,9 @@ The Worldwide Equipment Guide app is a Kotlin Multiplatform Mobile (KMM) project
 ## Dependencies
 
 * https://github.com/Kotlin/kotlinx.coroutines
-* https://github.com/icerockdev/moko-mvvm
-* https://github.com/Kodein-Framework/Kodein-DI
 * https://github.com/ktorio/ktor
 * https://github.com/cashapp/sqldelight
 
 ## References
 
 * [ODIN](https://odin.tradoc.army.mil/)
-* [Kotlin Multiplatform - MVVM & Clean Architecture](https://proandroiddev.com/kotlin-multiplatform-mvvm-clean-architecture-f20b99f90b95)
-* [moko mvvm documentation](https://github.com/icerockdev/moko-mvvm)
