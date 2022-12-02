@@ -104,6 +104,7 @@ android {
         minSdk = 26
         targetSdk = 32
     }
+    namespace = "com.jamesjmtaylor.weg"
 }
 
 sqldelight {
