@@ -25,12 +25,16 @@ import com.google.accompanist.pager.HorizontalPager
 import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.jamesjmtaylor.weg.android.subviews.ExpandableCard
+import com.jamesjmtaylor.weg.android.subviews.ExpandableCardContent
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
+//TODO: Add notes section
+//TODO: Make entire thing scrollable, not just expanding cards
+//TODO: Figure out how to present other equipment details (maybe top bar navigation?)
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,11 +79,12 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                 modifier = Modifier.padding(8.dp)
             )
             equipment.details?.variants?.let { variants ->
-                LazyColumn {
+                LazyColumn(modifier = Modifier.weight(weight = 1f)) {
                     items(variants.size) { index ->
+                        val content = ExpandableCardContent(variants[index].name, variants[index].notes)
                         ExpandableCard(
-                            variant = variants[index],
-                            onCardArrowClick = { vm.onCardArrowClicked(index) },
+                            content = content,
+                            onCardClick = { vm.onCardArrowClicked(index) },
                             expanded = expandedCardIds.contains(index),
                         )
                     }
