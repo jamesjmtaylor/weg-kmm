@@ -5,8 +5,11 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
+import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -15,8 +18,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.ExperimentalLifecycleComposeApi
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import coil.compose.AsyncImage
@@ -33,7 +38,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
 //TODO: Add notes section
-//TODO: Make entire thing scrollable, not just expanding cards
+
 //TODO: Figure out how to present other equipment details (maybe top bar navigation?)
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
@@ -51,11 +56,19 @@ const val EQUIPMENT_ID_KEY = "EQUIPMENT_ID_KEY"
 fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifier = Modifier) {
     val lce by vm.lce.collectAsStateWithLifecycle()
     val expandedCardIds by vm.expandedCardIdsList.collectAsStateWithLifecycle()
+
     if (lce.loading) Spinner()
     if (lce.error != null) Text("Error: ${lce.error}")
-//TODO: Implement Details Views per https://proandroiddev.com/expandable-lists-in-jetpack-compose-b0b78c767b4
+
     lce.content?.let { equipment ->
-        Column {
+        val scrollState = rememberScrollState()
+        Column(modifier = Modifier.verticalScroll(scrollState)) {
+            Text(
+                text = equipment.title ?: stringResource(R.string.placeholder_name),
+                modifier = Modifier.padding(8.dp),
+                fontSize = 16.sp,
+                fontWeight = FontWeight.Bold
+            )
             val pagerState = rememberPagerState()
             HorizontalPager(count = equipment.images?.size ?: 0, state = pagerState) { index ->
                 AsyncImage(
@@ -74,21 +87,23 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                     .align(Alignment.CenterHorizontally)
                     .padding(8.dp),
             )
-            Text(
-                text = equipment.title ?: stringResource(R.string.placeholder_name),
-                modifier = Modifier.padding(8.dp)
-            )
-            equipment.details?.variants?.let { variants ->
-                LazyColumn(modifier = Modifier.weight(weight = 1f)) {
-                    items(variants.size) { index ->
-                        val content = ExpandableCardContent(variants[index].name, variants[index].notes)
-                        ExpandableCard(
-                            content = content,
-                            onCardClick = { vm.onCardArrowClicked(index) },
-                            expanded = expandedCardIds.contains(index),
-                        )
-                    }
-                }
+            val notes = equipment.details?.notes ?: stringResource(R.string.placeholder_notes)
+            val country = "Country of Origin: ${equipment.details?.countryOfOrigin
+                ?: stringResource(R.string.ina)}"
+            val date = "Date of Introduction: ${equipment.details?.dateOfIntroduction?.description
+                ?: stringResource(R.string.ina)}"
+
+            Text(text = notes, modifier = Modifier.padding(8.dp))
+            Text(text = country, modifier = Modifier.padding(8.dp))
+            Text(text = date, modifier = Modifier.padding(8.dp))
+
+            equipment.details?.variants?.forEachIndexed { index, variant ->
+                val content = ExpandableCardContent(variant.name, variant.notes)
+                ExpandableCard(
+                    content = content,
+                    onCardClick = { vm.onCardArrowClicked(index) },
+                    expanded = expandedCardIds.contains(index),
+                )
             }
         }
     }
