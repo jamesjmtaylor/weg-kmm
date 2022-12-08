@@ -39,7 +39,7 @@ import kotlinx.coroutines.flow.StateFlow
 
 //TODO: Add notes section
 
-//TODO: Figure out how to present other equipment details (maybe top bar navigation?)
+//TODO: Use https://johncodeos.com/how-to-create-tabs-with-jetpack-compose/ to present other equipment details
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -108,6 +108,7 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
         }
     }
 }
+
 
 @Preview(showBackground = true, name = "Light Mode")
 @Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
