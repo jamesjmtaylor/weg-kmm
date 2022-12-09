@@ -5,9 +5,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.viewModels
-import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Text
@@ -38,8 +36,7 @@ import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
 //TODO: Add notes section
-
-//TODO: Use https://johncodeos.com/how-to-create-tabs-with-jetpack-compose/ to present other equipment details
+//TODO: TopBar is too complex and significantly slows down framerates.  Use an expandable card for each section
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {

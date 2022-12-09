@@ -109,7 +109,7 @@ data class Section (
 @Serializable
 data class Subsection (
     val name: String,
-    val properties: List<Property>
+    val properties: List<Property>? = null
 )
 
 
