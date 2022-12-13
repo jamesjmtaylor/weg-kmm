@@ -29,6 +29,7 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.jamesjmtaylor.weg.android.subviews.ExpandableCard
 import com.jamesjmtaylor.weg.android.subviews.ExpandableCardContent
+import com.jamesjmtaylor.weg.android.subviews.ExpandableContent
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
@@ -89,13 +90,27 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                 ?: stringResource(R.string.ina)}"
             val date = "Date of Introduction: ${equipment.details?.dateOfIntroduction?.description
                 ?: stringResource(R.string.ina)}"
+            val proliferation = "Proliferation: ${equipment.details?.proliferation ?: stringResource(R.string.ina)}"
+            val cards = mutableListOf<ExpandableCardContent>()
+            cards.add(ExpandableCardContent("Overview", "$notes\n$country\n$date\n$proliferation"))
 
-            Text(text = notes, modifier = Modifier.padding(8.dp))
-            Text(text = country, modifier = Modifier.padding(8.dp))
-            Text(text = date, modifier = Modifier.padding(8.dp))
+            val variants = equipment.details?.variants
+                ?.joinToString("\n") { "${it.name}: ${it.notes}" }
+            if (!variants.isNullOrEmpty()) cards.add(ExpandableCardContent("Variants", variants))
+            val properties : List<ExpandableCardContent?>? = equipment.details?.sections?.map { section ->
+                if (!section.sections.isNullOrEmpty()) {
+                    return@map null //TODO handle subsections
+                } else if (!section.properties.isNullOrEmpty()) {
+                    section.properties?.joinToString("\n") {
+                        "${it.name}: ${it.value} ${it.units ?: ""}"
+                    }?.let { content -> ExpandableCardContent(section.name, content) }
+                } else {
+                    return@map null
+                }
+            }
+            properties?.let { properties.forEach { property -> property?.let { cards.add(it)}}}
 
-            equipment.details?.variants?.forEachIndexed { index, variant ->
-                val content = ExpandableCardContent(variant.name, variant.notes)
+            cards.forEachIndexed { index, content ->
                 ExpandableCard(
                     content = content,
                     onCardClick = { vm.onCardArrowClicked(index) },
