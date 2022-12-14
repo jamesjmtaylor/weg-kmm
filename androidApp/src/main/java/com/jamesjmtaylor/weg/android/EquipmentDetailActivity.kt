@@ -99,7 +99,7 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
             if (!variants.isNullOrEmpty()) cards.add(ExpandableCardContent("Variants", variants))
             val properties : List<ExpandableCardContent?>? = equipment.details?.sections?.map { section ->
                 if (!section.sections.isNullOrEmpty()) {
-                    return@map null //TODO handle subsections
+                    return@map null //TODO handle subsections, i.e. APFDS ammo, HEAT ammo, etc.
                 } else if (!section.properties.isNullOrEmpty()) {
                     section.properties?.joinToString("\n") {
                         "${it.name}: ${it.value} ${it.units ?: ""}"
