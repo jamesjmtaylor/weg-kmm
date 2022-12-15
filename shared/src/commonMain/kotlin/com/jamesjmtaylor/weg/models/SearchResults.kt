@@ -103,7 +103,8 @@ data class DateOfIntroduction(private val value: Long? = null, val description: 
 data class Section (
     val name: String,
     val properties: List<Property>? = null,
-    val sections: List<Subsection>? = null
+    @SerialName("sections")
+    val subsections: List<Subsection>? = null
 )
 
 @Serializable

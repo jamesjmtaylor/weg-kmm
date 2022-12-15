@@ -29,7 +29,6 @@ import com.google.accompanist.pager.HorizontalPagerIndicator
 import com.google.accompanist.pager.rememberPagerState
 import com.jamesjmtaylor.weg.android.subviews.ExpandableCard
 import com.jamesjmtaylor.weg.android.subviews.ExpandableCardContent
-import com.jamesjmtaylor.weg.android.subviews.ExpandableContent
 import com.jamesjmtaylor.weg.android.subviews.Spinner
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
@@ -85,30 +84,33 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
                     .align(Alignment.CenterHorizontally)
                     .padding(8.dp),
             )
+            val cards = mutableListOf<ExpandableCardContent>()
+
             val notes = equipment.details?.notes ?: stringResource(R.string.placeholder_notes)
             val country = "Country of Origin: ${equipment.details?.countryOfOrigin
                 ?: stringResource(R.string.ina)}"
             val date = "Date of Introduction: ${equipment.details?.dateOfIntroduction?.description
                 ?: stringResource(R.string.ina)}"
             val proliferation = "Proliferation: ${equipment.details?.proliferation ?: stringResource(R.string.ina)}"
-            val cards = mutableListOf<ExpandableCardContent>()
             cards.add(ExpandableCardContent("Overview", "$notes\n$country\n$date\n$proliferation"))
 
-            val variants = equipment.details?.variants
-                ?.joinToString("\n") { "${it.name}: ${it.notes}" }
-            if (!variants.isNullOrEmpty()) cards.add(ExpandableCardContent("Variants", variants))
-            val properties : List<ExpandableCardContent?>? = equipment.details?.sections?.map { section ->
-                if (!section.sections.isNullOrEmpty()) {
-                    return@map null //TODO handle subsections, i.e. APFDS ammo, HEAT ammo, etc.
-                } else if (!section.properties.isNullOrEmpty()) {
-                    section.properties?.joinToString("\n") {
-                        "${it.name}: ${it.value} ${it.units ?: ""}"
-                    }?.let { content -> ExpandableCardContent(section.name, content) }
-                } else {
-                    return@map null
-                }
+            equipment.details?.variants?.joinToString("\n") { "${it.name}: ${it.notes}" }?.let {
+                cards.add(ExpandableCardContent("Variants", it))
             }
-            properties?.let { properties.forEach { property -> property?.let { cards.add(it)}}}
+
+            equipment.details?.sections?.forEach { section ->
+                val subsectionStrings : MutableList<String> = section.subsections?.map { subsection ->
+                    subsection.properties?.joinToString("\n") {
+                        "${it.name}: ${it.value} ${it.units ?: ""}"
+                    } ?: ""
+                }?.toMutableList() ?: mutableListOf()
+                section.properties?.joinToString("\n") {
+                    "${it.name}: ${it.value} ${it.units ?: ""}"
+                }?.let { subsectionStrings.add(0, it) }
+                cards.add(
+                    ExpandableCardContent(section.name, subsectionStrings.joinToString("\n\n"))
+                )
+            }
 
             cards.forEachIndexed { index, content ->
                 ExpandableCard(
@@ -120,6 +122,7 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
         }
     }
 }
+
 
 
 @Preview(showBackground = true, name = "Light Mode")
