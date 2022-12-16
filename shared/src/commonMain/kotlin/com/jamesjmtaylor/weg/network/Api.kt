@@ -34,7 +34,7 @@ class Api {
         return results ?: emptyList()
     }
 
-    suspend fun getEquipmentById(equipmentId: Long): SearchResult {
+    suspend fun getSearchResultById(equipmentId: Long): SearchResult {
         val equipmentUrl = API_URL + "?format=json&" +
             "action=parseG2&" + //parseG2, returning equipment details
             "formatversion=2&" + //version 2 is the latest API json result format

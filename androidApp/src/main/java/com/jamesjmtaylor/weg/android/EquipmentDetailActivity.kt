@@ -35,8 +35,6 @@ import com.jamesjmtaylor.weg.models.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
 
-//TODO: Add notes section
-//TODO: TopBar is too complex and significantly slows down framerates.  Use an expandable card for each section
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
     override fun onCreate(savedInstanceState: Bundle?) {

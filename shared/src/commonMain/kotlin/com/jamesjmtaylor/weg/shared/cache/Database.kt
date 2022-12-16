@@ -1,8 +1,6 @@
 package com.jamesjmtaylor.weg.shared.cache
 
-import com.jamesjmtaylor.weg.EquipmentType
 import com.jamesjmtaylor.weg.models.Image
-import com.jamesjmtaylor.weg.models.PageProgress
 import com.jamesjmtaylor.weg.models.SearchResult
 
 /**
@@ -106,5 +104,19 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
             images = listOf(Image(imageName,imageUrl)),
             page = page
         )
+    }
+
+    /**
+     * Rehydrates a [SearchResult] from the [AppDatabase]. Note that a LEFT JOIN is used to
+     * return a row for each [Image] that has a matching [SearchResult] equipment id.  This means
+     * that if a [SearchResult] has 3 images then there will be 3 [SearchResult]s, each with a
+     * different image. This function groups all the [SearchResult] images so that it can return a
+     * single [SearchResult] with multiple images.
+     */
+    fun getSearchResultById(id: Long): SearchResult? {
+        val ungroupedResults = dbQuery.selectResultByEquipmentId(id, ::mapSearchResultSelecting).executeAsList()
+        val images = ungroupedResults.flatMap { it.images ?: emptyList() }
+        val result = ungroupedResults.firstOrNull() ?: return null
+        return SearchResult(result.title, result.id, result.categories, images)
     }
 }

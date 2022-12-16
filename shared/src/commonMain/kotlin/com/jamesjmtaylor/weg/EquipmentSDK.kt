@@ -42,10 +42,15 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
 
     suspend fun getEquipmentDetails(id: Long): SearchResult {
         //TODO: Persist the result to the database using the various tables in the [Database] class.
-        //TODO: Implement db retrieval
-        // db.fetchDetails(id)
-
-        return api.getEquipmentById(id)
+        val dbResult = db.getSearchResultById(id)
+        // TODO: Figure a way around not erasing the persisted page # for the result (maybe moot because dbResult will never be null?)
+        // TODO: Or maybe we should pass in the SearchResult & just fetch then attach the details?
+        if (dbResult == null) {
+            val apiResult = api.getSearchResultById(id)
+            db.insertSearchResult(listOf(apiResult))
+        } else {
+            return dbResult
+        }
     }
 
     /**
