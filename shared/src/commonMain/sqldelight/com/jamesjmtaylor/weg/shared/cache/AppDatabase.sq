@@ -1,5 +1,7 @@
 import kotlin.collections.List;
 
+-- SEARCH RESULTS
+
 CREATE TABLE search_result (
 equipment_id INTEGER NOT NULL PRIMARY KEY,
 title TEXT,
@@ -31,6 +33,8 @@ LEFT JOIN image ON image.equipment_id == search_result.equipment_id;
 removeAllResults:
 DELETE FROM search_result;
 
+-- IMAGES
+
 CREATE TABLE image (
 equipment_id INTEGER NOT NULL,
 name TEXT,
@@ -48,11 +52,13 @@ WHERE equipment_id = ?;
 removeAllImages:
 DELETE FROM image;
 
+-- DETAILS
+
 CREATE TABLE search_result_details (
-equipment_id INTEGER NOT NULL,
+equipment_id INTEGER PRIMARY KEY NOT NULL,
 tiers TEXT,
 notes TEXT,
-date_of_introduction INTEGER,
+date_of_introduction TEXT,
 country_of_origin TEXT,
 proliferation TEXT
 );
@@ -62,26 +68,64 @@ INSERT OR REPLACE INTO search_result_details(equipment_id, tiers, notes, date_of
 VALUES(?,?,?,?,?,?);
 
 selectEquipmentDetailsByEquipmentId:
-SELECT * FROM search_result_details
-WHERE equipment_id = ?;
+SELECT d.*, v.*
+FROM search_result_details d
+JOIN search_results_variants v
+ON v.equipment_id == d.equipment_id
+WHERE d.equipment_id = ?;
 
 removeAllEquipmentDetails:
 DELETE FROM search_result_details;
 
-CREATE TABLE search_results_properties (
+-- VARIANTS
+
+CREATE TABLE search_results_variants (
 equipment_id INTEGER NOT NULL,
-section_name TEXT,
+variant_name TEXT,
+variant_notes TEXT,
+FOREIGN KEY (equipment_id) REFERENCES search_result_details (equipment_id)
+);
+
+insertSearchResultVariants:
+INSERT OR REPLACE INTO search_results_variants(equipment_id, variant_name, variant_notes)
+VALUES(?,?,?);
+
+removeAllSearchResultVariants:
+DELETE FROM search_results_variants;
+
+-- SECTIONS
+
+CREATE TABLE search_results_sections (
+id INTEGER PRIMARY KEY AUTOINCREMENT,
+equipment_id INTEGER NOT NULL,
+parent_section_id INTEGER,
+section_name TEXT
+);
+
+insertSearchResultSections:
+INSERT OR REPLACE INTO search_results_sections(equipment_id, parent_section_id, section_name)
+VALUES(?,?,?);
+
+selectSearchResultSectionsByEquipmentId:
+SELECT * FROM search_results_variants
+WHERE equipment_id = ?;
+
+removeAllSearchResultSections:
+DELETE FROM search_results_sections;
+
+-- PROPERTIES
+
+CREATE TABLE search_results_properties (
+section_id INTEGER NOT NULL,
 properties_name TEXT,
-properties_value TEXT
+properties_value TEXT,
+properties_unit TEXT,
+FOREIGN KEY (section_id) REFERENCES search_results_sections (id)
 );
 
 insertSearchResultProperties:
-INSERT OR REPLACE INTO search_results_properties(equipment_id, section_name, properties_name, properties_value)
+INSERT OR REPLACE INTO search_results_properties(properties_name, properties_value, properties_unit, section_id)
 VALUES(?,?,?,?);
-
-selectSearchResultPropertiesByEquipmentId:
-SELECT * FROM search_results_properties
-WHERE equipment_id = ?;
 
 removeAllSearchResultProperties:
 DELETE FROM search_results_properties;

@@ -133,11 +133,6 @@ data class Image (
     var url: String? = null
 )
 
-@Serializable
-data class PageProgress(
-    val equipmentType: EquipmentType,
-    val page: Long
-)
 
 
 

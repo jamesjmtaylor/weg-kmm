@@ -1,7 +1,9 @@
 package com.jamesjmtaylor.weg.shared.cache
 
+import com.jamesjmtaylor.weg.models.DateOfIntroduction
 import com.jamesjmtaylor.weg.models.Image
 import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.SearchResultDetails
 
 /**
  * SQLDelight database for caching REST API query results.
@@ -105,18 +107,47 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
             page = page
         )
     }
-
+    //TODO: Persist the result to the database using the various tables in the [Database] class.
     /**
-     * Rehydrates a [SearchResult] from the [AppDatabase]. Note that a LEFT JOIN is used to
-     * return a row for each [Image] that has a matching [SearchResult] equipment id.  This means
-     * that if a [SearchResult] has 3 images then there will be 3 [SearchResult]s, each with a
-     * different image. This function groups all the [SearchResult] images so that it can return a
-     * single [SearchResult] with multiple images.
+     * Rehydrates a [SearchResultDetails].
      */
-    fun getSearchResultById(id: Long): SearchResult? {
-        val ungroupedResults = dbQuery.selectResultByEquipmentId(id, ::mapSearchResultSelecting).executeAsList()
-        val images = ungroupedResults.flatMap { it.images ?: emptyList() }
-        val result = ungroupedResults.firstOrNull() ?: return null
-        return SearchResult(result.title, result.id, result.categories, images)
+    fun getSearchResultDetailsById(id: Long): SearchResultDetails? {
+        val ungroupedResults = dbQuery.selectEquipmentDetailsByEquipmentId(id).executeAsList()
+        return null
+    }
+
+    private fun mapDetailsSelecting(
+        equipmentId: Long,
+        tiers: String?,
+        notes: String?,
+        dateOfIntroduction: Long?,
+        countryOfOrigin: String?,
+        proliferation: String?,
+        version: Long,
+        a: String?,
+        b: String?
+    ) : SearchResultDetails {
+        return SearchResultDetails(
+            tiers = emptyList(), //TODO: actually split tiers string into Boolean list.
+            notes = notes,
+            dateOfIntroduction = DateOfIntroduction(
+                value = dateOfIntroduction,
+                description = if (dateOfIntroduction == 0L) "INA" else dateOfIntroduction.toString()),
+            countryOfOrigin = countryOfOrigin,
+            proliferation = proliferation,
+            version = version
+        )
+    }
+
+    fun insertSearchResultDetails(id: Long, details: SearchResultDetails) {
+        details.variants.forEach { dbQuery.insertSearchResultVariants(id, it.name, it.notes)  }
+        dbQuery.insertSearchResultDetails(
+            equipment_id = id,
+            tiers = details.tiers.toString(),
+            notes = details.notes,
+            date_of_introduction = details.dateOfIntroduction?.description,
+            country_of_origin = details.countryOfOrigin,
+            proliferation = details.proliferation
+        )
     }
 }
