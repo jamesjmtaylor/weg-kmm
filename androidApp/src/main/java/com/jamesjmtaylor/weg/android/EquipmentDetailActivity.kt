@@ -34,6 +34,7 @@ import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
 import com.jamesjmtaylor.weg.models.*
 import kotlinx.coroutines.flow.FlowCollector
 import kotlinx.coroutines.flow.StateFlow
+import java.util.UUID
 
 class EquipmentDetailActivity : ComponentActivity()  {
     private val vm : EquipmentDetailViewModel by viewModels { EquipmentDetailViewModel.Factory }
@@ -146,7 +147,7 @@ fun PreviewEquipmentDetailScreen() {
             version = 1
         )
         val images = listOf(Image("Abrams", "https://odin.tradoc.army.mil/mediawiki/images/4/44/M1A2%28C%29.jpg"))
-        val searchResult = SearchResult("Tank", 0, listOf("Land"), images, details, 0)
+        val searchResult = SearchResult("Tank", UUID.randomUUID().toString(), listOf("Land"), images, details, 0)
         val lce = LCE(false, searchResult)
         val expandedIds = listOf(1)
         EquipmentDetailScreen(object : PreviewEquipmentDetailViewModel{

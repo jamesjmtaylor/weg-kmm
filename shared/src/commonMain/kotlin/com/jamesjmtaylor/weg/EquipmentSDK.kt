@@ -139,7 +139,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         for (result in results) {
             val trimmedCategories = result.categories.map { it.trim() }
             val trimmedResult =
-                SearchResult(result.title, result.id, trimmedCategories, result.images)
+                SearchResult(result.title, result.identifier, trimmedCategories, result.images)
             trimmedResults.add(trimmedResult)
         }
         return trimmedResults
@@ -151,4 +151,4 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
  * filtering of results based on the selected bottom navigation tab, as well as pagination caching
  * based on how far the user has scrolled on a particular tab.
  */
-enum class EquipmentType(val apiName: String) { LAND("Land"), AIR("Air"), SEA("Sea") }
+enum class EquipmentType(val apiName: String) { LAND("land-53d795"), AIR("air-13f10a"), SEA("sea-35e296") }

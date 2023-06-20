@@ -46,7 +46,7 @@ fun EquipmentLazyVerticalGrid(
                 text = text,
                 modifier = Modifier.height(150.dp).clickable {
                     val intent = Intent(context, EquipmentDetailActivity::class.java)
-                    val id = pagingItems[index]?.id ?: 0
+                    val id = pagingItems[index]?.identifier ?: ""
                     intent.putExtra(EQUIPMENT_ID_KEY, id)
                     context.startActivity(intent)
                 }

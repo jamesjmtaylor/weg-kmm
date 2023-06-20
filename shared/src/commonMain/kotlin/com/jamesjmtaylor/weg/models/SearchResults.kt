@@ -50,7 +50,7 @@ data class ParseG2Response (
 @Serializable
 data class SearchResult (
     val title: String? = null,
-    val id: Long,
+    val identifier: String,
     val categories: List<String> = emptyList(),
     val images: List<Image>? = null,
     @SerialName("json")

@@ -7,6 +7,10 @@ import io.ktor.client.HttpClient
 import io.ktor.client.features.json.JsonFeature
 import io.ktor.client.features.json.serializer.KotlinxSerializer
 import io.ktor.client.request.*
+import io.ktor.client.utils.EmptyContent.contentType
+import io.ktor.http.ContentType
+import io.ktor.http.contentType
+import kotlinx.serialization.Serializable
 import kotlinx.serialization.json.Json
 
 class Api {
@@ -18,35 +22,31 @@ class Api {
     }
 
     suspend fun getEquipmentSearchResults(category: String, page: Int, searchTerm: String? = null): List<SearchResult> {
-        val srSearch = if (searchTerm != null)  //Filter search to category & searchTerm
-            "srsearch=intitle:$searchTerm+incategory:$category&"
-        else  //Filter search to just the provided category
-            "srsearch=incategory:$category&"
-        val searchURl = API_URL + "?format=json&" +
-                "action=query&" + //Query, allowing search parameters
-                "list=searchG2&" + //Fetch from the G2 database
-                "srimages=1&" + //Fetch images with results
-                srSearch +
-                "srlimit=${PAGE_SIZE}" + //How many results to fetch
-                "&sroffset=${page * PAGE_SIZE}" //Where to start fetching results
-        val results = httpClient.get<SearchResults>(searchURl).asList()?.toMutableList()
+        val query: String = searchTerm?.let {
+            "+contentType:WegCard +categories:$category +(WegCard.name:(*$it*)^100)"
+        } ?: "+contentType:WegCard +categories:$category"
+        val results = httpClient.post<SearchResults>(API_URL){
+            contentType(ContentType.Application.Json)
+            body = RequestBody(page * PAGE_SIZE, query)
+        }.asList()?.toMutableList()
         results?.map { r -> r.images?.map { it.url = BASE_URL + it.url } }
         return results ?: emptyList()
     }
 
     suspend fun getSearchResultById(equipmentId: Long): SearchResult {
-        val equipmentUrl = API_URL + "?format=json&" +
-            "action=parseG2&" + //parseG2, returning equipment details
-            "formatversion=2&" + //version 2 is the latest API json result format
-            "pageid=$equipmentId" //the equipment to retrieve
-        val result = httpClient.get<ParseG2Response>(equipmentUrl).parseG2
+
+        val result = httpClient.post<ParseG2Response>(API_URL){
+            contentType(ContentType.Application.Json)
+        }.parseG2
         result.images?.map { it.url = BASE_URL + it.url }
         return result
     }
+    @Serializable
+    data class RequestBody(val offset: Int, val query: String, val limit: Int = PAGE_SIZE, val sort: String = "score")
 
     companion object {
-        const val BASE_URL = "https://odin.tradoc.army.mil"
-        const val API_URL = "$BASE_URL/mediawiki/api.php"
+        const val BASE_URL = "https://odin.tradoc.army.mil/dotcms/"
+        const val API_URL = "$BASE_URL/api/content/_search"
         const val PAGE_SIZE = 100
     }
 }
