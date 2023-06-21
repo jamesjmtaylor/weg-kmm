@@ -132,7 +132,6 @@ fun PreviewEquipmentDetailScreen() {
         val dimensions = listOf(Property("Length", "2m"), Property("Width", "1m"), Property("Height", ".5m"))
         val mainGun = listOf(Property("Caliber", "120mm"), Property("Ammo", "APFDS"))
         val sections = listOf(Section("Dimensions", dimensions), Section("Main Gun", mainGun))
-        val variants = listOf(Variant("M1","The original."), Variant("M1A2", "The latest."))
         val details = SearchResultDetails(
             tiers = listOf(false,false,false,true),
             notes = "This is a tank",

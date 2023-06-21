@@ -13,67 +13,75 @@ import kotlinx.serialization.descriptors.SerialDescriptor
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
 
+import kotlinx.serialization.*
+import kotlinx.serialization.json.*
+import kotlinx.serialization.descriptors.*
+import kotlinx.serialization.encoding.*
+
 @Serializable
 data class SearchResults (
-    val batchcomplete: String? = null,
-    /**
-     * This field is null if you paginate beyond the total hits
-     */
-    @SerialName("continue")
-    val searchResultsContinue: Continue? = null,
-    val query: Query? = null
-) {
-    fun asList(): List<SearchResult>? {
-        return query?.searchResults
-    }
-}
-@Serializable
-data class Continue (
-    val sroffset: Long? = null,
-    @SerialName("continue")
-    val continueString: String? = null
+    val entity: Entity,
+    val errors: JsonArray,
+    val messages: JsonArray,
+    val permissions: JsonArray
 )
 
 @Serializable
-data class Query (
-    @SerialName("searchG2")
-    val searchResults: List<SearchResult> = emptyList(),
-    @SerialName("totalhits")
-    val totalHits: Long? = null
+data class Entity (
+    val contentTook: Long,
+    val jsonObjectView: JSONObjectView,
+    val queryTook: Long,
+    val resultsSize: Long
 )
 
 @Serializable
-data class ParseG2Response (
-    val parseG2: SearchResult
+data class JSONObjectView (
+    val contentlets: List<Contentlet>
 )
 
 @Serializable
-data class SearchResult (
-    val title: String? = null,
+data class Contentlet (
+    val hostName: String,
+    val modDate: String,
+    val notes: String,
+    val disstring: String,
+    val publishDate: String,
+    val title: String,
+    val baseType: String,
+    val inode: String,
+    val archived: Boolean,
+    val host: String,
+    val working: Boolean,
+    val locked: Boolean,
+    val stInode: String,
+    val contentType: String,
+    val live: Boolean,
+    val filterlabel: String,
+    val owner: String,
     val identifier: String,
-    val categories: List<String> = emptyList(),
-    val images: List<Image>? = null,
-    @SerialName("json")
-    val details: SearchResultDetails? = null,
-    val page: Long? = null
-)
+    val images: String,
 
-@Serializable
-data class SearchResultDetails (
-    val tiers: List<Boolean> = emptyList(),
-    val notes: String? = null,
-    @Serializable(with = DateOfIntroduction.DateOfIntroductionSerializer::class)
-    val dateOfIntroduction: DateOfIntroduction? = null,
-    val countryOfOrigin: String? = null,
-    val proliferation: String? = null,
-    val selectedRegions: List<String> = emptyList(),
-    val checkedCountries: List<String> = emptyList(),
-    val sections: List<Section> = emptyList(),
-    val variants: List<Variant> = emptyList(),
-    val type: String? = null,
-    val version: Long
-)
+    @SerialName("languageId")
+    val languageID: Long,
 
+    val sections: String,
+    val url: String,
+    val titleImage: String,
+    val modUserName: String,
+    val hasLiveVersion: Boolean,
+    val folder: String,
+    val hasTitleImage: Boolean,
+    val sortOrder: Long,
+    val modUser: String,
+    val name: String,
+    val disname: String,
+
+    @SerialName("__icon__")
+    val icon: String,
+
+    val contentTypeIcon: String,
+    val dateOfIntroduction: String? = null
+)
 /**
  * Handles mixed ODIN API type that can either be a long (i.e. 1984) or a string (i.e. "INA").
  * @property value the underlying value of the date of introduction as retrieved from the API.
@@ -113,18 +121,11 @@ data class Subsection (
     val properties: List<Property>? = null
 )
 
-
 @Serializable
 data class Property (
     val name: String,
     val value: String,
     val units: String? = null
-)
-
-@Serializable
-data class Variant (
-    val name: String,
-    val notes: String
 )
 
 @Serializable
