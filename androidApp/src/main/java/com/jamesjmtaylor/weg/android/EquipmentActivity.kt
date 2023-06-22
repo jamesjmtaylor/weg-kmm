@@ -26,7 +26,7 @@ import com.jamesjmtaylor.weg.android.subviews.BottomBarScreen
 import com.jamesjmtaylor.weg.android.subviews.EquipmentLazyVerticalGrid
 import com.jamesjmtaylor.weg.android.subviews.SearchBar
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
-import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.Contentlet
 import com.jamesjmtaylor.weg.network.Api
 import kotlinx.coroutines.flow.Flow
 
@@ -73,7 +73,7 @@ fun BottomNavScreen(equipment: EquipmentViewModel.EquipmentFlow) {
 }
 
 @Composable
-fun EquipmentColumn(equipment: Flow<PagingData<SearchResult>>, padding: PaddingValues) {
+fun EquipmentColumn(equipment: Flow<PagingData<Contentlet>>, padding: PaddingValues) {
     Column {
         SearchBar()
         EquipmentLazyVerticalGrid(equipment, Modifier.padding(padding))
@@ -84,9 +84,9 @@ fun EquipmentColumn(equipment: Flow<PagingData<SearchResult>>, padding: PaddingV
 @Composable
 fun PreviewEquipmentScreen() {
     WorldwideEquipmentGuideTheme {
-        val pagingSource = object : PagingSource<Int, SearchResult>() {
-            override fun getRefreshKey(state: PagingState<Int, SearchResult>): Int? = 0
-            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, SearchResult> =
+        val pagingSource = object : PagingSource<Int, Contentlet>() {
+            override fun getRefreshKey(state: PagingState<Int, Contentlet>): Int? = 0
+            override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Contentlet> =
                 LoadResult.Page( emptyList(), 0, 1)
         }
         val land = Pager(PagingConfig(pageSize = Api.PAGE_SIZE)) { pagingSource }.flow

@@ -3,20 +3,20 @@ package com.jamesjmtaylor.weg.models
 // To parse the JSON, install kotlin's serialization plugin and do:
 //
 // val json          = Json(JsonConfiguration.Stable)
-// val searchResults = json.parse(SearchResults.serializer(), jsonString)
+// val SearchResults = json.parse(SearchResults.serializer(), jsonString)
 
-import com.jamesjmtaylor.weg.EquipmentType
-import kotlinx.serialization.*
+import kotlinx.serialization.KSerializer
+import kotlinx.serialization.SerialName
+import kotlinx.serialization.Serializable
+import kotlinx.serialization.decodeFromString
 import kotlinx.serialization.descriptors.PrimitiveKind
 import kotlinx.serialization.descriptors.PrimitiveSerialDescriptor
 import kotlinx.serialization.descriptors.SerialDescriptor
+import kotlinx.serialization.encodeToString
 import kotlinx.serialization.encoding.Decoder
 import kotlinx.serialization.encoding.Encoder
-
-import kotlinx.serialization.*
-import kotlinx.serialization.json.*
-import kotlinx.serialization.descriptors.*
-import kotlinx.serialization.encoding.*
+import kotlinx.serialization.json.Json
+import kotlinx.serialization.json.JsonArray
 
 @Serializable
 data class SearchResults (
@@ -41,71 +41,18 @@ data class JSONObjectView (
 
 @Serializable
 data class Contentlet (
-    val hostName: String,
-    val modDate: String,
     val notes: String,
-    val disstring: String,
-    val publishDate: String,
     val title: String,
-    val baseType: String,
-    val inode: String,
-    val archived: Boolean,
-    val host: String,
-    val working: Boolean,
-    val locked: Boolean,
-    val stInode: String,
-    val contentType: String,
-    val live: Boolean,
-    val filterlabel: String,
-    val owner: String,
     val identifier: String,
-    val images: String,
-
-    @SerialName("languageId")
-    val languageID: Long,
+    @Serializable(with = Image.ImageSerializer::class)
+    val images: List<Image>,
 
     val sections: String,
-    val url: String,
-    val titleImage: String,
-    val modUserName: String,
-    val hasLiveVersion: Boolean,
-    val folder: String,
-    val hasTitleImage: Boolean,
-    val sortOrder: Long,
-    val modUser: String,
-    val name: String,
-    val disname: String,
-
-    @SerialName("__icon__")
-    val icon: String,
-
-    val contentTypeIcon: String,
+    val domain: Map<String, String>,
+    val proliferation: Map<String, String>,
+    val origin: Map<String, String>,
     val dateOfIntroduction: String? = null
 )
-/**
- * Handles mixed ODIN API type that can either be a long (i.e. 1984) or a string (i.e. "INA").
- * @property value the underlying value of the date of introduction as retrieved from the API.
- * @property description the value used to describe the date of introduction.  Either a full date
- * (in string format) or "INA" for "Is Not Available"
- */
-@Serializable
-data class DateOfIntroduction(private val value: Long? = null, val description: String){
-    object DateOfIntroductionSerializer : KSerializer<DateOfIntroduction> {
-        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("dateOfIntroduction", PrimitiveKind.LONG)
-        override fun serialize(encoder: Encoder, value: DateOfIntroduction) = encoder.encodeLong(value.value ?: 0)
-        override fun deserialize(decoder: Decoder): DateOfIntroduction {
-            return try {
-                val long = decoder.decodeLong()
-                DateOfIntroduction(long, long.toString())
-            } catch (e: Exception) {
-                val string = decoder.decodeString()
-                DateOfIntroduction(description = string)
-            }
-        }
-    }
-}
-
-
 
 @Serializable
 data class Section (
@@ -132,8 +79,16 @@ data class Property (
 data class Image (
     val name: String? = null,
     var url: String? = null
-)
-
+) {
+    //TODO: Verify this works
+    object ImageSerializer : KSerializer<List<Image>> {
+        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("images", PrimitiveKind.STRING)
+        override fun serialize(encoder: Encoder, value: List<Image>) = encoder.encodeString(Json.encodeToString(value))
+        override fun deserialize(decoder: Decoder): List<Image> {
+            return  Json.decodeFromString(decoder.decodeString())
+        }
+    }
+}
 
 
 

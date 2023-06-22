@@ -34,7 +34,8 @@ fun ExpandableCard(
         animationSpec = tween(
             durationMillis = ROTATION_ANIMATION_DURATION,
             easing = LinearEasing
-    ))
+    ), label = ""
+    )
 
     Card(
         elevation = 4.dp,

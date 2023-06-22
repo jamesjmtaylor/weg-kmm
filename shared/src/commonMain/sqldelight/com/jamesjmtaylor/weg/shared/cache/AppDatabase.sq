@@ -63,7 +63,7 @@ country_of_origin TEXT,
 proliferation TEXT
 );
 
-insertSearchResultDetails:
+insertContentletDetails:
 INSERT OR REPLACE INTO search_result_details(equipment_id, tiers, notes, date_of_introduction, country_of_origin, proliferation)
 VALUES(?,?,?,?,?,?);
 
@@ -86,11 +86,11 @@ variant_notes TEXT,
 FOREIGN KEY (equipment_id) REFERENCES search_result_details (equipment_id)
 );
 
-insertSearchResultVariants:
+insertContentletVariants:
 INSERT OR REPLACE INTO search_results_variants(equipment_id, variant_name, variant_notes)
 VALUES(?,?,?);
 
-removeAllSearchResultVariants:
+removeAllContentletVariants:
 DELETE FROM search_results_variants;
 
 -- SECTIONS
@@ -102,15 +102,15 @@ parent_section_id INTEGER,
 section_name TEXT
 );
 
-insertSearchResultSections:
+insertContentletSections:
 INSERT OR REPLACE INTO search_results_sections(equipment_id, parent_section_id, section_name)
 VALUES(?,?,?);
 
-selectSearchResultSectionsByEquipmentId:
+selectContentletSectionsByEquipmentId:
 SELECT * FROM search_results_variants
 WHERE equipment_id = ?;
 
-removeAllSearchResultSections:
+removeAllContentletSections:
 DELETE FROM search_results_sections;
 
 -- PROPERTIES
@@ -123,11 +123,11 @@ properties_unit TEXT,
 FOREIGN KEY (section_id) REFERENCES search_results_sections (id)
 );
 
-insertSearchResultProperties:
+insertContentletProperties:
 INSERT OR REPLACE INTO search_results_properties(properties_name, properties_value, properties_unit, section_id)
 VALUES(?,?,?,?);
 
-removeAllSearchResultProperties:
+removeAllContentletProperties:
 DELETE FROM search_results_properties;
 
 

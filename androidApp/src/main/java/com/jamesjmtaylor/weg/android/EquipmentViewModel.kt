@@ -8,7 +8,7 @@ import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import androidx.paging.PagingData
 import com.jamesjmtaylor.weg.EquipmentSDK
-import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.Contentlet
 import kotlinx.coroutines.flow.Flow
 
 /**
@@ -24,9 +24,9 @@ class EquipmentViewModel(private val sdk: EquipmentSDK): ViewModel() {
     var equipmentFlow = EquipmentFlow(_landFlow, _airFlow, _seaFlow)
 
     data class EquipmentFlow(
-        val land: Flow<PagingData<SearchResult>>,
-        val air: Flow<PagingData<SearchResult>>,
-        val sea: Flow<PagingData<SearchResult>>
+        val land: Flow<PagingData<Contentlet>>,
+        val air: Flow<PagingData<Contentlet>>,
+        val sea: Flow<PagingData<Contentlet>>
     )
 
     companion object {

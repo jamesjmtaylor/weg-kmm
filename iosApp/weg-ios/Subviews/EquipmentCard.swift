@@ -10,7 +10,7 @@ import SwiftUI
 import shared
 
 struct EquipmentCard: View {
-    var equipment: SearchResult
+    var equipment: Contentlet
     var body: some View {
         ZStack(alignment: .bottom) {
             let url = URL(string: equipment.images?.first?.url ?? "")
@@ -28,7 +28,7 @@ struct EquipmentCard: View {
 
 struct EquipmentCard_Previews: PreviewProvider {
     static var previews: some View {
-        let placeholder = SearchResult(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil, page: 0)
+        let placeholder = Contentlet(title: "Tank", id: 1, categories: ["Land"], images: [Image(name: "Tank", url: "")], details: nil, page: 0)
         EquipmentCard(equipment: placeholder)
     }
 }

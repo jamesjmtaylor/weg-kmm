@@ -20,17 +20,17 @@ import com.jamesjmtaylor.weg.android.EQUIPMENT_ID_KEY
 import com.jamesjmtaylor.weg.android.EquipmentDetailActivity
 import com.jamesjmtaylor.weg.android.R
 import com.jamesjmtaylor.weg.android.ui.theme.WorldwideEquipmentGuideTheme
-import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.Contentlet
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.FlowCollector
 
 @Composable
 fun EquipmentLazyVerticalGrid(
-    searchResultFlow: Flow<PagingData<SearchResult>>,
+    ContentletFlow: Flow<PagingData<Contentlet>>,
     modifier: Modifier = Modifier
 ) {
     val context = LocalContext.current
-    val pagingItems: LazyPagingItems<SearchResult> = searchResultFlow.collectAsLazyPagingItems()
+    val pagingItems: LazyPagingItems<Contentlet> = ContentletFlow.collectAsLazyPagingItems()
     if (pagingItems.itemCount == 0) Spinner()
     LazyVerticalGrid(
         columns = GridCells.Adaptive(150.dp),
@@ -74,8 +74,8 @@ fun LoadError(state: LoadState) {
 @Composable
 fun PreviewEquipmentScreen() {
     WorldwideEquipmentGuideTheme {
-        EquipmentLazyVerticalGrid(object : Flow<PagingData<SearchResult>>{
-            override suspend fun collect(collector: FlowCollector<PagingData<SearchResult>>) {}
+        EquipmentLazyVerticalGrid(object : Flow<PagingData<Contentlet>>{
+            override suspend fun collect(collector: FlowCollector<PagingData<Contentlet>>) {}
         })
     }
 }

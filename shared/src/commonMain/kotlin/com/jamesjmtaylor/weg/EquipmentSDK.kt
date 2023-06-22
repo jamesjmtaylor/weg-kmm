@@ -2,7 +2,7 @@
 
 package com.jamesjmtaylor.weg
 
-import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.Contentlet
 import com.jamesjmtaylor.weg.network.Api
 import com.jamesjmtaylor.weg.network.Api.Companion.PAGE_SIZE
 import com.jamesjmtaylor.weg.shared.cache.Database
@@ -39,18 +39,18 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
     private val db = Database(databaseDriverFactory)
     private val api = Api()
     private val scope = MainScope()
-
-    suspend fun getEquipmentDetails(id: Long): SearchResult? {
-        val dbResult = db.getSearchResultDetailsById(id)
-        return if (dbResult == null) {
-            val apiResult = api.getSearchResultById(id)
-            apiResult.details?.let { db.insertSearchResultDetails(id, it) }
-            apiResult
-        } else {
-            return null //TODO: Make non-nullable
-//            searchResult.copy(details = dbResult)
-        }
-    }
+//
+//    suspend fun getEquipmentDetails(id: Long): Contentlet? {
+//        val dbResult = db.getContentletDetailsById(id)
+//        return if (dbResult == null) {
+//            val apiResult = api.getContentletById(id)
+//            apiResult.details?.let { db.insertContentletDetails(id, it) }
+//            apiResult
+//        } else {
+//            return null //TODO: Make non-nullable
+//            Contentlet.copy(details = dbResult)
+//        }
+//    }
 
     /**
      * Retrieves equipment by category and page. NOTE: DB returns results in ascending id order. API returns
@@ -62,9 +62,9 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
      * @param page the page number to retrieve for infinite scrolling support. 0-based index.
      * @return a list of search results for the given page.
      */
-    private suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): List<SearchResult> {
-        val dbResults = trimCategoryNames(db.fetchResults(page))
-            .filter { it.categories.contains(type.apiName) }.toList()
+    private suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): List<Contentlet> {
+        val dbResults = db.fetchResults(page)
+            .filter { it.domain.keys.contains(type.apiName) }.toList()
         return dbResults.ifEmpty {
             val apiResults = api.getEquipmentSearchResults(type.apiName, page)
             apiResults.let { db.insertSearchResults(apiResults, page) }
@@ -87,7 +87,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
             )
         }
     )
-    val landPagingData: CommonFlow<PagingData<SearchResult>>
+    val landPagingData: CommonFlow<PagingData<Contentlet>>
         get() = landPager.pagingData
             .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
             .asCommonFlow() // So that iOS can watch the Flow
@@ -106,7 +106,7 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
             )
         }
     )
-    val airPagingData: CommonFlow<PagingData<SearchResult>>
+    val airPagingData: CommonFlow<PagingData<Contentlet>>
         get() = airPager.pagingData
             .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
             .asCommonFlow() // So that iOS can watch the Flow
@@ -126,24 +126,10 @@ class EquipmentSDK(databaseDriverFactory: DatabaseDriverFactory) {
         }
     )
 
-    val seaPagingData: CommonFlow<PagingData<SearchResult>>
+    val seaPagingData: CommonFlow<PagingData<Contentlet>>
         get() = seaPager.pagingData
             .cachedIn(scope) // cachedIn from AndroidX Paging. on iOS, this is a no-op
             .asCommonFlow() // So that iOS can watch the Flow
-    /**
-     * Necessary because SQL DB adds space characters in the category strings, preventing simple
-     * filtering based on the selected bottom navigation equipment type.
-     */
-    private fun trimCategoryNames(results: List<SearchResult>): MutableList<SearchResult> {
-        val trimmedResults = mutableListOf<SearchResult>()
-        for (result in results) {
-            val trimmedCategories = result.categories.map { it.trim() }
-            val trimmedResult =
-                SearchResult(result.title, result.identifier, trimmedCategories, result.images)
-            trimmedResults.add(trimmedResult)
-        }
-        return trimmedResults
-    }
 }
 
 /**

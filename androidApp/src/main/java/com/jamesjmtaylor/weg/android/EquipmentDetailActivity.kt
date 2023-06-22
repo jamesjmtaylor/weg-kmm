@@ -93,23 +93,24 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
             val proliferation = "Proliferation: ${equipment.details?.proliferation ?: stringResource(R.string.ina)}"
             cards.add(ExpandableCardContent("Overview", "$notes\n$country\n$date\n$proliferation"))
 
-            equipment.details?.variants?.joinToString("\n") { "${it.name}: ${it.notes}" }?.let {
-                cards.add(ExpandableCardContent("Variants", it))
-            }
-
-            equipment.details?.sections?.forEach { section ->
-                val subsectionStrings : MutableList<String> = section.subsections?.map { subsection ->
-                    subsection.properties?.joinToString("\n") {
-                        "${it.name}: ${it.value} ${it.units ?: ""}"
-                    } ?: ""
-                }?.toMutableList() ?: mutableListOf()
-                section.properties?.joinToString("\n") {
-                    "${it.name}: ${it.value} ${it.units ?: ""}"
-                }?.let { subsectionStrings.add(0, it) }
-                cards.add(
-                    ExpandableCardContent(section.name, subsectionStrings.joinToString("\n\n"))
-                )
-            }
+            //TODO: Fix section parsing once image parsing is done
+//            equipment.details?.variants?.joinToString("\n") { "${it.name}: ${it.notes}" }?.let {
+//                cards.add(ExpandableCardContent("Variants", it))
+//            }
+//
+//            equipment.details?.sections?.forEach { section ->
+//                val subsectionStrings : MutableList<String> = section.subsections?.map { subsection ->
+//                    subsection.properties?.joinToString("\n") {
+//                        "${it.name}: ${it.value} ${it.units ?: ""}"
+//                    } ?: ""
+//                }?.toMutableList() ?: mutableListOf()
+//                section.properties?.joinToString("\n") {
+//                    "${it.name}: ${it.value} ${it.units ?: ""}"
+//                }?.let { subsectionStrings.add(0, it) }
+//                cards.add(
+//                    ExpandableCardContent(section.name, subsectionStrings.joinToString("\n\n"))
+//                )
+//            }
 
             cards.forEachIndexed { index, content ->
                 ExpandableCard(
@@ -122,52 +123,40 @@ fun EquipmentDetailScreen(vm: PreviewEquipmentDetailViewModel, modifier: Modifie
     }
 }
 
-
-
-@Preview(showBackground = true, name = "Light Mode")
-@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
-@Composable
-fun PreviewEquipmentDetailScreen() {
-    WorldwideEquipmentGuideTheme {
-        val dimensions = listOf(Property("Length", "2m"), Property("Width", "1m"), Property("Height", ".5m"))
-        val mainGun = listOf(Property("Caliber", "120mm"), Property("Ammo", "APFDS"))
-        val sections = listOf(Section("Dimensions", dimensions), Section("Main Gun", mainGun))
-        val details = SearchResultDetails(
-            tiers = listOf(false,false,false,true),
-            notes = "This is a tank",
-            dateOfIntroduction = DateOfIntroduction(1988, "1988"),
-            countryOfOrigin = "USA",
-            proliferation = "USA",
-            selectedRegions = emptyList(),
-            checkedCountries = emptyList(),
-            sections = sections,
-            variants = variants,
-            type = "WEG",
-            version = 1
-        )
-        val images = listOf(Image("Abrams", "https://odin.tradoc.army.mil/mediawiki/images/4/44/M1A2%28C%29.jpg"))
-        val searchResult = SearchResult("Tank", UUID.randomUUID().toString(), listOf("Land"), images, details, 0)
-        val lce = LCE(false, searchResult)
-        val expandedIds = listOf(1)
-        EquipmentDetailScreen(object : PreviewEquipmentDetailViewModel{
-            override val lce: StateFlow<LCE>
-                get() = object : StateFlow<LCE> {
-                    override val replayCache = listOf(lce)
-                    override val value = lce
-                    override suspend fun collect(collector: FlowCollector<LCE>): Nothing {
-                        throw Exception("collection exception")
-                    }
-                }
-            override val expandedCardIdsList: StateFlow<List<Int>>
-                get() = object : StateFlow<List<Int>> {
-                    override val replayCache = listOf(expandedIds)
-                    override val value = expandedIds
-                    override suspend fun collect(collector: FlowCollector<List<Int>>): Nothing {
-                        throw Exception("collection exception")
-                    }
-                }
-            override fun getEquipmentDetails(id: Long) {}
-            override fun onCardArrowClicked(cardId: Int) {}
-        })
-    }
-}
+//TODO: Fix preview
+//
+//@Preview(showBackground = true, name = "Light Mode")
+//@Preview(uiMode = Configuration.UI_MODE_NIGHT_YES, showBackground = true, name = "Dark Mode")
+//@Composable
+//fun PreviewEquipmentDetailScreen() {
+//    WorldwideEquipmentGuideTheme {
+//        val dimensions = listOf(Property("Length", "2m"), Property("Width", "1m"), Property("Height", ".5m"))
+//        val mainGun = listOf(Property("Caliber", "120mm"), Property("Ammo", "APFDS"))
+//        val sections = listOf(Section("Dimensions", dimensions), Section("Main Gun", mainGun))
+//        val details = Contentlet(hostName = "",)
+//        val images = listOf(Image("Abrams", "https://odin.tradoc.army.mil/mediawiki/images/4/44/M1A2%28C%29.jpg"))
+//        val Contentlet = Contentlet("Tank", UUID.randomUUID().toString())
+//        val lce = LCE(false, Contentlet)
+//        val expandedIds = listOf(1)
+//        EquipmentDetailScreen(object : PreviewEquipmentDetailViewModel{
+//            override val lce: StateFlow<LCE>
+//                get() = object : StateFlow<LCE> {
+//                    override val replayCache = listOf(lce)
+//                    override val value = lce
+//                    override suspend fun collect(collector: FlowCollector<LCE>): Nothing {
+//                        throw Exception("collection exception")
+//                    }
+//                }
+//            override val expandedCardIdsList: StateFlow<List<Int>>
+//                get() = object : StateFlow<List<Int>> {
+//                    override val replayCache = listOf(expandedIds)
+//                    override val value = expandedIds
+//                    override suspend fun collect(collector: FlowCollector<List<Int>>): Nothing {
+//                        throw Exception("collection exception")
+//                    }
+//                }
+//            override fun getEquipmentDetails(id: Long) {}
+//            override fun onCardArrowClicked(cardId: Int) {}
+//        })
+//    }
+//}

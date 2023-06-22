@@ -11,7 +11,7 @@ import shared
 
 /// Used to allow SwiftUI previews without requiring a ``weg_ios/wegApp/sdk`` to be injected.
 class PreviewEquipmentViewModel: NSObject, ObservableObject {
-    @Published var equipment : [SearchResult] = []
+    @Published var equipment : [Contentlet] = []
     /// Tells if all records have been loaded. (Used to hide/show activity spinner)
     var hasNextPage = false
     
@@ -30,7 +30,7 @@ class EquipmentViewModel: PreviewEquipmentViewModel {
 class LandEquipmentViewModel: EquipmentViewModel {
     override func fetchEquipment() {
         sdk.landPagingData.watch { nullablePagingData in
-            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+            guard let list = nullablePagingData?.compactMap({ $0 as? Contentlet }) else {
                 return
             }
             self.equipment = list
@@ -45,7 +45,7 @@ class LandEquipmentViewModel: EquipmentViewModel {
 class AirEquipmentViewModel: EquipmentViewModel {
     override func fetchEquipment() {
         sdk.airPagingData.watch { nullablePagingData in
-            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+            guard let list = nullablePagingData?.compactMap({ $0 as? Contentlet }) else {
                 return
             }
             self.equipment = list
@@ -60,7 +60,7 @@ class AirEquipmentViewModel: EquipmentViewModel {
 class SeaEquipmentViewModel: EquipmentViewModel {
     override func fetchEquipment() {
         sdk.seaPagingData.watch { nullablePagingData in
-            guard let list = nullablePagingData?.compactMap({ $0 as? SearchResult }) else {
+            guard let list = nullablePagingData?.compactMap({ $0 as? Contentlet }) else {
                 return
             }
             self.equipment = list

@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewmodel.initializer
 import androidx.lifecycle.viewmodel.viewModelFactory
 import com.jamesjmtaylor.weg.EquipmentSDK
-import com.jamesjmtaylor.weg.models.SearchResult
+import com.jamesjmtaylor.weg.models.Contentlet
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -13,7 +13,6 @@ import kotlinx.coroutines.flow.StateFlow
 interface PreviewEquipmentDetailViewModel {
     val lce: StateFlow<LCE>
     val expandedCardIdsList: StateFlow<List<Int>>
-    fun getEquipmentDetails(id: Long)
     fun onCardArrowClicked(cardId: Int)
 }
 
@@ -25,16 +24,6 @@ class EquipmentDetailViewModel(private val sdk: EquipmentSDK): PreviewEquipmentD
     private val _expandedCardIdsList = MutableStateFlow(listOf<Int>())
     override val expandedCardIdsList: StateFlow<List<Int>> get() = _expandedCardIdsList
 
-    override fun getEquipmentDetails(id: Long) {
-        backgroundScope.launch{
-            _lceLiveData.emit(LCE(true))
-            try {
-                _lceLiveData.emit(LCE(false, sdk.getEquipmentDetails(id)))
-            } catch (exception: Exception) {
-                _lceLiveData.emit(LCE(false, error = exception.message))
-            }
-        }
-    }
 
     override fun onCardArrowClicked(cardId: Int) {
         _expandedCardIdsList.value = _expandedCardIdsList.value.toMutableList().also { list ->
@@ -52,4 +41,4 @@ class EquipmentDetailViewModel(private val sdk: EquipmentSDK): PreviewEquipmentD
     }
 }
 
-data class LCE(val loading: Boolean, val content: SearchResult? = null, val error: String? = null)
+data class LCE(val loading: Boolean, val content: Contentlet? = null, val error: String? = null)
