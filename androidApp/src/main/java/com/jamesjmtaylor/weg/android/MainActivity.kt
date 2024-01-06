@@ -1,4 +1,4 @@
-package com.example.worldwideequipmentguide.android
+package com.jamesjmtaylor.weg.android
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
@@ -8,7 +8,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
-import com.example.worldwideequipmentguide.Greeting
+import com.jamesjmtaylor.weg.Greeting
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {

@@ -1,4 +1,4 @@
-package com.example.worldwideequipmentguide
+package com.jamesjmtaylor.weg
 
 interface Platform {
     val name: String

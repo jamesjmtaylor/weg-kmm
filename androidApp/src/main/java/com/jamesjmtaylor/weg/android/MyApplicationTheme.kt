@@ -1,4 +1,4 @@
-package com.example.worldwideequipmentguide.android
+package com.jamesjmtaylor.weg.android
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape

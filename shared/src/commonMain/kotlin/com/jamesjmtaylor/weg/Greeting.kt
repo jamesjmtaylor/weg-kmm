@@ -1,4 +1,4 @@
-package com.example.worldwideequipmentguide
+package com.jamesjmtaylor.weg
 
 class Greeting {
     private val platform: Platform = getPlatform()
