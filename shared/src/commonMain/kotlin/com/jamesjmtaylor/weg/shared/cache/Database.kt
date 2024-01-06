@@ -35,11 +35,11 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
      */
     internal fun fetchResults(page: Int? = null): List<Contentlet> {
         //TODO: Return grouped results again
-        val ungroupedResults = if (page != null) {
-            dbQuery.selectResultByPage(page.toLong(), ::mapContentletSelecting).executeAsList()
-        } else {
-            dbQuery.selectAllSearchResults(::mapContentletSelecting).executeAsList()
-        }
+//        val ungroupedResults = if (page != null) {
+//            dbQuery.selectResultByPage(page.toLong(), ::mapContentletSelecting).executeAsList()
+//        } else {
+//            dbQuery.selectAllSearchResults(::mapContentletSelecting).executeAsList()
+//        }
 
 //        val groupedMap = ungroupedResults.groupBy { it.identifier }
 //        val groupedList = mutableListOf<Contentlet>()
@@ -48,7 +48,8 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
 //            val groupedImages = group.value.flatMap { it.images ?: emptyList() }
 //            groupedList.add(Contentlet(result.title, result.identifier, result.domain, groupedImages ))
 //        }
-        return ungroupedResults
+//        return ungroupedResults
+        return emptyList()
     }
 
     internal fun insertSearchResults(results: List<Contentlet>, page: Int) {
@@ -63,7 +64,7 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
     }
 
     private fun insertImages(result: Contentlet) {
-        result.images?.forEach { image ->
+        result.images.forEach { image ->
             dbQuery.insertImage(
                 name = image.name,
                 equipment_id = result.identifier,
@@ -83,7 +84,7 @@ class Database(databaseDriverFactory: DatabaseDriverFactory) {
 
     /**
      * Converts the raw SQLite data values from the row into a [Contentlet] DTO. Unused parameters
-     * are necessary because the column mapping is ordinally, not titularly, based.
+     * are necessary because the column mapping is ordinal, not titular, based.
      */
     @Suppress("UNUSED_PARAMETER")
     private fun mapContentletSelecting(
