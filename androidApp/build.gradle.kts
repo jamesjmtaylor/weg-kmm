@@ -4,10 +4,10 @@ plugins {
 }
 
 android {
-    namespace = "com.example.worldwideequipmentguide.android"
+    namespace = "com.jamesjmtaylor.weg2015.android"
     compileSdk = 34
     defaultConfig {
-        applicationId = "com.example.worldwideequipmentguide.android"
+        applicationId = "com.jamesjmtaylor.weg2015.android"
         minSdk = 30
         targetSdk = 34
         versionCode = 1

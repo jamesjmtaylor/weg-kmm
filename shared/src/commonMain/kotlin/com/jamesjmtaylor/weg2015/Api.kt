@@ -1,4 +1,4 @@
-package com.jamesjmtaylor.weg
+package com.jamesjmtaylor.weg2015
 
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body

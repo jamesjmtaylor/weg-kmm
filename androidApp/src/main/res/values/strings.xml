@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="weg">WEG</string>
+    <string name="placeholder_search">Search</string>
+    <string name="placeholder_name">No title available</string>
+    <string name="ina">INA</string>
+    <string name="land">Land</string>
+    <string name="air">Air</string>
+    <string name="sea">Sea</string>
+    <string name="app_name">WEG</string>
+    <string name="default_error">An error occurred</string>
+    <string name="placeholder_notes">No notes available</string>
+</resources>

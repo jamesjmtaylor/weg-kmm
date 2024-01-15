@@ -50,7 +50,7 @@ kotlin {
 }
 
 android {
-    namespace = "com.example.worldwideequipmentguide"
+    namespace = "com.jamesjmtaylor.weg2015"
     compileSdk = 34
     defaultConfig {
         minSdk = 30

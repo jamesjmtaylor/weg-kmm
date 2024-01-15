@@ -1,4 +1,4 @@
-package com.jamesjmtaylor.weg
+package com.jamesjmtaylor.weg2015
 
 import kotlinx.serialization.KSerializer
 import kotlinx.serialization.Serializable

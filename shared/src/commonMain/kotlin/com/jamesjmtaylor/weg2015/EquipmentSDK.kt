@@ -1,12 +1,9 @@
-package com.jamesjmtaylor.weg
+package com.jamesjmtaylor.weg2015
 
-import androidx.paging.Pager
-import androidx.paging.PagingConfig
-import androidx.paging.PagingData
-import com.jamesjmtaylor.weg.Api.Companion.PAGE_SIZE
 import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.currentCoroutineContext
 import kotlinx.coroutines.flow.Flow
-import kotlin.math.max
+import kotlinx.coroutines.flow.flow
 
 class EquipmentSDK() {
     private val api = Api()
@@ -33,9 +30,10 @@ class EquipmentSDK() {
      * @param type the type of equipment to retrieve.
      * @param page the page number to retrieve for infinite scrolling support. 0-based index.
      * @return a list of search results for the given page.
+     * TODO: See https://proandroiddev.com/writing-swift-friendly-kotlin-multiplatform-apis-part-ix-flow-d4b6ada59395 for making this more "Swifty"
      */
-    suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): String {
-        return api.getEquipment(type.apiName, page)
+    fun getEquipmentSearchResults(type: EquipmentType, page: Int): Flow<String> = flow {
+        api.getEquipment(type.apiName, page)
     }
 
 //TODO: Fix paging, see https://developer.android.com/topic/libraries/architecture/paging/v3-overview
@@ -63,5 +61,7 @@ class EquipmentSDK() {
  * The type of equipment and the associated [apiName] (generally title cased).  This class allows
  * filtering of results based on the selected bottom navigation tab, as well as pagination caching
  * based on how far the user has scrolled on a particular tab.
+ * TODO: Fetch new category names on each run with the category "variable" parameters (NOT the "key" parameters).
+ * https://odin.tradoc.army.mil/dotcms/api/subnav/weg
  */
-enum class EquipmentType(val apiName: String) { LAND("land-53d795"), AIR("air-13f10a"), SEA("sea-35e296") }
+enum class EquipmentType(val apiName: String) { LAND("land-f5e1db"), AIR("air-e61af2"), SEA("sea-35e296") }

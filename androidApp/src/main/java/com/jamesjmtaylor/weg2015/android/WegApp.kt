@@ -1,8 +1,8 @@
-package com.jamesjmtaylor.weg.android
+package com.jamesjmtaylor.weg2015.android
 
 import android.app.Activity
 import android.app.Application
-import com.jamesjmtaylor.weg.EquipmentSDK
+import com.jamesjmtaylor.weg2015.EquipmentSDK
 
 class WegApp : Application() {
     val sdk = EquipmentSDK()

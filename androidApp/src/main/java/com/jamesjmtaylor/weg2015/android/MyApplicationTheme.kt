@@ -1,4 +1,4 @@
-package com.jamesjmtaylor.weg.android
+package com.jamesjmtaylor.weg2015.android
 
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.shape.RoundedCornerShape
