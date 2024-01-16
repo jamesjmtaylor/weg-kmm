@@ -38,14 +38,15 @@ class Api {
         }
     }
 
-    suspend fun getEquipment(category: String, page: Int, searchTerm: String? = null): String {
+    //TODO: io.ktor.serialization.JsonConvertException: Illegal input: Unexpected JSON token at offset 6024: Expected start of the object '{', but had ':' instead at path: $.entity.jsonObjectView.contentlets[0].domain
+    suspend fun getSearchResults(category: String, page: Int, searchTerm: String? = null): SearchResults {
         val query: String = searchTerm?.let {
             "+contentType:WegCard +categories:$category +(WegCard.name:(*$it*)^100)"
         } ?: "+contentType:WegCard +categories:$category"
         val results = httpClient.post {
             url(API_URL)
             setBody(RequestBody(page * PAGE_SIZE, query))
-        }.body<String>()
+        }.body<SearchResults>()
         return results
     }
 

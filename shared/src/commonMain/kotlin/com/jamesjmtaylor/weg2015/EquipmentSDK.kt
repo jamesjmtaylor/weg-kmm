@@ -1,9 +1,6 @@
 package com.jamesjmtaylor.weg2015
 
 import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.currentCoroutineContext
-import kotlinx.coroutines.flow.Flow
-import kotlinx.coroutines.flow.flow
 
 class EquipmentSDK() {
     private val api = Api()
@@ -32,8 +29,8 @@ class EquipmentSDK() {
      * @return a list of search results for the given page.
      * TODO: See https://proandroiddev.com/writing-swift-friendly-kotlin-multiplatform-apis-part-ix-flow-d4b6ada59395 for making this more "Swifty"
      */
-    fun getEquipmentSearchResults(type: EquipmentType, page: Int): Flow<String> = flow {
-        api.getEquipment(type.apiName, page)
+    suspend fun getEquipmentSearchResults(type: EquipmentType, page: Int): List<Contentlet> {
+        return api.getSearchResults(type.apiName, page).entity.jsonObjectView.contentlets
     }
 
 //TODO: Fix paging, see https://developer.android.com/topic/libraries/architecture/paging/v3-overview
