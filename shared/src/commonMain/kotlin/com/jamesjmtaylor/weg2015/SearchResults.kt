@@ -39,8 +39,9 @@ data class Contentlet (
     val identifier: String,
     @Serializable(with = Image.ImageSerializer::class)
     val images: List<Image>,
+    @Serializable(with = Section.SectionSerializer::class)
+    val sections: List<Section>,
 
-    val sections: String,
     val domain: List<Map<String, String>>,
     val proliferation: List<Map<String, String>> = emptyList(),
     val origin: List<Map<String, String>> = emptyList(),
@@ -48,6 +49,7 @@ data class Contentlet (
 )
 
 
+private val json = Json{ ignoreUnknownKeys = true }
 @Serializable
 data class Image (
     val name: String? = null,
@@ -57,9 +59,32 @@ data class Image (
         override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("images", PrimitiveKind.STRING)
         override fun serialize(encoder: Encoder, value: List<Image>) = encoder.encodeString(Json.encodeToString(value))
         override fun deserialize(decoder: Decoder): List<Image> {
-            return  Json.decodeFromString(decoder.decodeString())
+            return  json.decodeFromString(decoder.decodeString())
         }
     }
+}
+@Serializable
+data class Section (
+    val name: String? = null,
+    val value: String? = null,
+    val units: String? = null,
+    val sections: List<Section> = emptyList(),
+    val properties: List<Property> = emptyList()
+) {
+    object SectionSerializer: KSerializer<List<Section>> {
+        override val descriptor: SerialDescriptor = PrimitiveSerialDescriptor("sections", PrimitiveKind.STRING)
+        override fun serialize(encoder: Encoder, value: List<Section>) = encoder.encodeString(Json.encodeToString(value))
+        override fun deserialize(decoder: Decoder): List<Section> {
+            return  json.decodeFromString(decoder.decodeString())
+        }
+    }
+
+    @Serializable
+    data class Property(
+        val name: String? = null,
+        val value: String? = null,
+        val units: String? = null
+    )
 }
 
 
