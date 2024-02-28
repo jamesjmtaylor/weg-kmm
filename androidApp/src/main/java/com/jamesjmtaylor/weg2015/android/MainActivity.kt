@@ -17,6 +17,8 @@ import androidx.compose.ui.unit.dp
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.lifecycleScope
 import androidx.lifecycle.repeatOnLifecycle
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.launch
 
 class MainActivity : ComponentActivity() {
@@ -34,7 +36,9 @@ class MainActivity : ComponentActivity() {
                 vm.uiState.collect { updateUI(it) }
             }
         }
-        vm.fetchEquipment()
+        CoroutineScope(IO).launch {
+            vm.fetchEquipment()
+        }
     }
 
     private fun updateUI(state: EquipmentUiState) {

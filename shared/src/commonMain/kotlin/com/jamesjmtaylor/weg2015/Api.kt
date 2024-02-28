@@ -37,17 +37,23 @@ class Api {
             level = LogLevel.ALL
         }
     }
-
+    private val deserializer = Json { ignoreUnknownKeys = true }
     //TODO: io.ktor.serialization.JsonConvertException: Illegal input: Unexpected JSON token at offset 6024: Expected start of the object '{', but had ':' instead at path: $.entity.jsonObjectView.contentlets[0].domain
-    suspend fun getSearchResults(category: String, page: Int, searchTerm: String? = null): SearchResults {
+    suspend fun getSearchResults(
+        category: String,
+        page: Int,
+        searchTerm: String? = null
+    ): SearchResults {
         val query: String = searchTerm?.let {
             "+contentType:WegCard +categories:$category +(WegCard.name:(*$it*)^100)"
         } ?: "+contentType:WegCard +categories:$category"
-        val results = httpClient.post {
+        val json = httpClient.post {
             url(API_URL)
             setBody(RequestBody(page * PAGE_SIZE, query))
-        }.body<SearchResults>()
-        return results
+        }.body<String>()
+
+        //Debug with `deserializer.decodeFromString<SearchResults>(json).entity.jsonObjectView.contentlets`
+        return deserializer.decodeFromString<SearchResults>(json)
     }
 
     @Serializable
